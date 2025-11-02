@@ -178,7 +178,6 @@ const MOCK_USERS = [
     { uid: 'user-003', name: '잭', handle: 'user3', color: 'bg-gray-500', profile: '3', group: 'group2' },
     { uid: 'user-004', name: '기뮤', handle: 'user4', color: 'bg-gray-500', profile: '4', group: 'group2' },
     { uid: 'user-005', name: '임시', handle: 'user5', color: 'bg-gray-500', profile: '4', group: 'group3' },
-    { uid: 'user-006', name: 'NPC', handle: 'user6', color: 'bg-gray-500', profile: '4', group: 'group3' },
 ];
     
     const EXAMPLE_IMAGE_URL = 'https://i.imgur.com/KDTgHmT.png';
@@ -359,7 +358,6 @@ const MOCK_USERS = [
                                 placeholder="인용할 내용을 입력하세요..."
                                 className="flex-grow p-2 text-base border-b border-gray-200 focus:outline-none focus:border-blue-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 resize-none overflow-hidden"
                                 rows="2"
-                                maxLength="280"
                             />
                         </div>
                         
@@ -520,7 +518,6 @@ const MOCK_USERS = [
                                     className="flex-grow p-2 text-base border-b border-gray-200 focus:outline-none focus:border-blue-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 resize-none overflow-hidden"
                                     rows="2"
                                     disabled={!currentUserId}
-                                    maxLength="280"
                                 />
                             </div>
                             
@@ -1224,7 +1221,6 @@ const MOCK_USERS = [
                     className="flex-grow p-2 text-base bg-transparent focus:outline-none dark:text-gray-100 resize-none overflow-hidden mt-2"
                     rows="1"
                     disabled={!currentUserId}
-                    maxLength="280" 
                 />
             </div>
 
@@ -2455,4 +2451,3 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
-
