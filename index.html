@@ -351,14 +351,19 @@ const MOCK_USERS = [
                             <div className="mr-3 flex-shrink-0">
                                 <ProfilePictureDisplay profile={formProfile} sizeClass="w-10 h-10" textSizeClass="text-lg" />
                             </div>
-                            <textarea
-                                ref={textareaRef}
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                                placeholder="인용할 내용을 입력하세요..."
-                                className="flex-grow p-2 text-base border-b border-gray-200 focus:outline-none focus:border-blue-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 resize-none overflow-hidden"
-                                rows="2"
-                            />
+                           <textarea
+  ref={textareaRef}
+  value={content}
+  onChange={(e) => setContent(e.target.value)}
+  onInput={(e) => {
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  }}
+  style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
+  placeholder="인용할 내용을 입력하세요."
+  className="flex-grow p-2 text-base border-b border-gray-200 focus:outline-none focus:border-blue-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 resize-none overflow-hidden"
+  rows="2"
+/>
                         </div>
                         
                         <div className="flex items-center justify-between mb-4 mt-2">
@@ -510,15 +515,20 @@ const MOCK_USERS = [
                                 <div className="mr-3 flex-shrink-0 pt-1">
                                     <ProfilePictureDisplay profile={formProfile} sizeClass="w-10 h-10" textSizeClass="text-lg" />
                                 </div>
-                                <textarea
-                                    ref={textareaRef}
-                                    value={replyContent}
-                                    onChange={(e) => setReplyContent(e.target.value)}
-                                    placeholder="답글을 입력하세요..."
-                                    className="flex-grow p-2 text-base border-b border-gray-200 focus:outline-none focus:border-blue-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 resize-none overflow-hidden"
-                                    rows="2"
-                                    disabled={!currentUserId}
-                                />
+                            <textarea
+  ref={textareaRef}
+  value={replyContent}
+  onChange={(e) => setReplyContent(e.target.value)}
+  onInput={(e) => {
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  }}
+  style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
+  placeholder="답글을 입력하세요."
+  className="flex-grow p-2 text-base border-b ... resize-none overflow-hidden"
+  rows="2"
+  disabled={!currentUserId}
+/>
                             </div>
                             
                             <div className="flex flex-col pl-12 pt-2">
@@ -1213,15 +1223,20 @@ const MOCK_USERS = [
                 <div className="mr-3 flex-shrink-0">
                     <ProfilePictureDisplay profile={formProfile} sizeClass="w-10 h-10 mt-2" textSizeClass="text-lg" />
                 </div>
-                <textarea
-                    ref={textareaRef}
-                    value={replyContent}
-                    onChange={(e) => setReplyContent(e.target.value)}
-                    placeholder={isMainPost ? "지금 무슨 일이 일어나고 있나요?" : "답글을 게시하세요."}
-                    className="flex-grow p-2 text-base bg-transparent focus:outline-none dark:text-gray-100 resize-none overflow-hidden mt-2"
-                    rows="1"
-                    disabled={!currentUserId}
-                />
+ <textarea
+  ref={textareaRef}
+  value={replyContent}
+  onChange={(e) => setReplyContent(e.target.value)}
+  onInput={(e) => {
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  }}
+  style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
+  placeholder={isMainPost ? "지금 무슨 일이 일어나고 있나요?" : "답글을 게시하세요."}
+  className="flex-grow p-2 text-base bg-transparent focus:outline-none dark:text-gray-100 resize-none overflow-hidden mt-2"
+  rows="1"
+  disabled={!currentUserId}
+/>
             </div>
 
             <div className="flex flex-col pl-12 pt-2">
