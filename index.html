@@ -1027,7 +1027,7 @@ const MOCK_USERS = [
                                         </span>
                                         <span>·</span>
                                         <span>{formatTimestamp(new Date(post.timestamp))}</span>
-                                        {post.editedAt && <span className="italic text-xs">(수정됨)</span>}
+                                        {post.editedAt && <span className="italic text-xs"> </span>}
                                     </div>
                                 )}
 
@@ -2468,6 +2468,7 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
 
