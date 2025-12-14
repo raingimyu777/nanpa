@@ -1103,7 +1103,7 @@ const MOCK_USERS = [
                                     <span className="text-gray-500 dark:text-gray-400 flex-shrink-0 text-sm">
                                         {new Date(post.timestamp).toLocaleString('ko-KR')}
                                     </span>
-                                    {post.editedAt && <span className="italic text-sm">(수정됨)</span>}
+                                    {post.editedAt && <span className="italic text-sm">( )</span>}
                                 </div>
                             )}
 
@@ -2468,6 +2468,7 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
 
