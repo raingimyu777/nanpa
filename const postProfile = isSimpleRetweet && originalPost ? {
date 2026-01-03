@@ -891,7 +891,7 @@ const MOCK_USERS = [
             p.authorId === App.currentUserId
         );
 
-      const postProfile = isSimpleRetweet && originalPost ? {
+const postProfile = isSimpleRetweet && originalPost ? {
   name: originalPost.authorName,
   handle: originalPost.authorHandle,
   color: originalPost.authorColor,
@@ -904,6 +904,7 @@ const MOCK_USERS = [
   profile: post.authorProfile,
   profileImageUrl: post.authorImageUrl,
 };
+
 
         // [1. 새 게시글 팝 애니메이션] - useEffect 수정 (1.2s로 변경)
         useEffect(() => {
@@ -2467,6 +2468,7 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
 
