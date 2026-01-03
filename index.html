@@ -244,19 +244,20 @@ const hasImage = imageUrl.startsWith('http');
             <div 
                 className={`rounded-full flex items-center justify-center flex-shrink-0 ${sizeClass} ${hasImage ? 'overflow-hidden bg-transparent' : defaultStyleClass}`}
             >
-                {hasImage ? (
-                    <img 
-                        src={imageUrl}
-                        alt={`${profile.name} profile`} 
-                        className="w-full h-full object-cover"
-                        onError={(e) => handleImageError(e, profile)}
-                    />
-                ) : (
-                    <span className={`${textSizeClass} ${isSmall ? 'text-white' : ''}`}>{profile.profile}</span>
-                )}
-            </div>
-        );
-    };
+{hasImage || profile.profile === '5' ? (
+    <img 
+        src={
+            hasImage
+              ? imageUrl
+              : 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'
+        }
+        alt={`${profile.name} profile`} 
+        className="w-full h-full object-cover"
+        onError={(e) => handleImageError(e, profile)}
+    />
+) : (
+    <span className={`${textSizeClass} ${isSmall ? 'text-white' : ''}`}>{profile.profile}</span>
+)}
 
     // [2. 프로필 비밀번호] - 비밀번호 입력 모달
     const PasswordModal = ({ user, onConfirm, onCancel }) => {
@@ -2483,5 +2484,6 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
