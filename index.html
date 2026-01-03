@@ -239,7 +239,7 @@ const MOCK_USERS = [
             >
                 {hasImage ? (
                     <img 
-                        src={profile.profileImageUrl} 
+                        src={imageUrl} 
                         alt={`${profile.name} profile`} 
                         className="w-full h-full object-cover"
                         onError={(e) => handleImageError(e, profile)}
@@ -2468,3 +2468,4 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
