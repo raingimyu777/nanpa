@@ -201,6 +201,16 @@ const MOCK_USERS = [
     };
 
     const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
+        // ✅ 현재 프로필 이미지 fallback (과거 게시물 대응)
+let imageUrl = profile.profileImageUrl;
+
+// 플루토: handle 기준으로 통일 (모든 게시물에 존재함)
+if (!imageUrl && profile?.handle === 'user5') {
+  imageUrl =
+    'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FlWjZ6%2FdJMcadgb6QS%2FAAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk%2Fimg.png';
+}
+
+const hasImage = imageUrl && imageUrl.startsWith('http');
         const hasImage = profile.profileImageUrl && profile.profileImageUrl.startsWith('http');
         
         const handleImageError = (e, profile) => {
@@ -235,7 +245,7 @@ const MOCK_USERS = [
             >
                 {hasImage ? (
                     <img 
-                        src={profile.profileImageUrl} 
+                        src={imageUrl}
                         alt={`${profile.name} profile`} 
                         className="w-full h-full object-cover"
                         onError={(e) => handleImageError(e, profile)}
@@ -2464,3 +2474,4 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
