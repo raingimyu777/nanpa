@@ -204,20 +204,8 @@ const MOCK_USERS = [
         });
     };
 
-    const ProfilePictureDisplay = ({
-  profile,
-  sizeClass = 'w-10 h-10',
-  textSizeClass = 'text-lg',
-  isSmall = false
-}) => {
-  if (!profile) return null;
-
-  const imageUrl = profile.profileImageUrl || '';
-  const hasImage = imageUrl.startsWith('http');
-
-  const defaultStyleClass = isSmall ? 'bg-transparent' : profile.color;
-
-
+    const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
+        const hasImage = profile.profileImageUrl && profile.profileImageUrl.startsWith('http');
         
         const handleImageError = (e, profile) => {
             e.target.style.display = 'none'; 
@@ -249,17 +237,19 @@ const MOCK_USERS = [
             <div 
                 className={`rounded-full flex items-center justify-center flex-shrink-0 ${sizeClass} ${hasImage ? 'overflow-hidden bg-transparent' : defaultStyleClass}`}
             >
-{hasImage ? (
-    <img 
-        src={imageUrl}
-        alt={`${profile.name} profile`} 
-        className="w-full h-full object-cover"
-        onError={(e) => handleImageError(e, profile)}
-    />
-) : (
-    <span className={`${textSizeClass} ${isSmall ? 'text-white' : ''}`}>{profile.profile}</span>
-)}
-
+                {hasImage ? (
+                    <img 
+                        src={profile.profileImageUrl} 
+                        alt={`${profile.name} profile`} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => handleImageError(e, profile)}
+                    />
+                ) : (
+                    <span className={`${textSizeClass} ${isSmall ? 'text-white' : ''}`}>{profile.profile}</span>
+                )}
+            </div>
+        );
+    };
 
     // [2. 프로필 비밀번호] - 비밀번호 입력 모달
     const PasswordModal = ({ user, onConfirm, onCancel }) => {
@@ -901,27 +891,19 @@ const MOCK_USERS = [
             p.authorId === App.currentUserId
         );
 
-const postProfile = isSimpleRetweet && originalPost ? {
-  name: originalPost.authorName,
-  handle: originalPost.authorHandle,
-  color: originalPost.authorColor,
-  profile: originalPost.authorProfile,
-  profileImageUrl:
-    originalPost.authorImageUrl ||
-    (originalPost.authorProfile === '5'
-      ? 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'
-      : ''),
-} : {
-  name: post.authorName,
-  handle: post.authorHandle,
-  color: post.authorColor,
-  profile: post.authorProfile,
-  profileImageUrl:
-    post.authorImageUrl ||
-    (post.authorProfile === '5'
-      ? 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'
-      : ''),
-};
+        const postProfile = isSimpleRetweet && originalPost ? {
+            name: originalPost.authorName,
+            handle: originalPost.authorHandle,
+            color: originalPost.authorColor,
+            profile: originalPost.authorProfile,
+            profileImageUrl: originalPost.authorImageUrl,
+        } : {
+            name: post.authorName,
+            handle: post.authorHandle,
+            color: post.authorColor,
+            profile: post.authorProfile,
+            profileImageUrl: post.authorImageUrl,
+        };
 
         // [1. 새 게시글 팝 애니메이션] - useEffect 수정 (1.2s로 변경)
         useEffect(() => {
@@ -2486,9 +2468,3 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
-
-
-
-
-
-
