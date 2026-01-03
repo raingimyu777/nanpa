@@ -204,15 +204,18 @@ const MOCK_USERS = [
         });
     };
 
-    const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
-const imageUrl =
-  profile.profileImageUrl ||
-  (profile.profile === '5'
-    ? 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'
-    : '');
+    const ProfilePictureDisplay = ({
+  profile,
+  sizeClass = 'w-10 h-10',
+  textSizeClass = 'text-lg',
+  isSmall = false
+}) => {
+  if (!profile) return null;
 
-const hasImage =
-  imageUrl.startsWith('http') || profile.profile === '5';
+  const imageUrl = profile.profileImageUrl || '';
+  const hasImage = imageUrl.startsWith('http');
+
+  const defaultStyleClass = isSmall ? 'bg-transparent' : profile.color;
 
 
         
@@ -256,6 +259,7 @@ const hasImage =
 ) : (
     <span className={`${textSizeClass} ${isSmall ? 'text-white' : ''}`}>{profile.profile}</span>
 )}
+
 
     // [2. 프로필 비밀번호] - 비밀번호 입력 모달
     const PasswordModal = ({ user, onConfirm, onCancel }) => {
@@ -2482,6 +2486,7 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
 
