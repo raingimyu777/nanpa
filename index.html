@@ -244,13 +244,9 @@ const hasImage = imageUrl.startsWith('http');
             <div 
                 className={`rounded-full flex items-center justify-center flex-shrink-0 ${sizeClass} ${hasImage ? 'overflow-hidden bg-transparent' : defaultStyleClass}`}
             >
-{hasImage || profile.profile === '5' ? (
+{hasImage ? (
     <img 
-        src={
-            hasImage
-              ? imageUrl
-              : 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'
-        }
+        src={imageUrl}
         alt={`${profile.name} profile`} 
         className="w-full h-full object-cover"
         onError={(e) => handleImageError(e, profile)}
@@ -2484,6 +2480,7 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
 
