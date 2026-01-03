@@ -205,13 +205,14 @@ const MOCK_USERS = [
     };
 
     const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
-        const imageUrl =
+const imageUrl =
   profile.profileImageUrl ||
-  (profile.handle === 'user5'
+  (profile.profile === '5'
     ? 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'
     : '');
 
 const hasImage = imageUrl.startsWith('http');
+
         
         const handleImageError = (e, profile) => {
             e.target.style.display = 'none'; 
@@ -897,19 +898,27 @@ const hasImage = imageUrl.startsWith('http');
             p.authorId === App.currentUserId
         );
 
-        const postProfile = isSimpleRetweet && originalPost ? {
-            name: originalPost.authorName,
-            handle: originalPost.authorHandle,
-            color: originalPost.authorColor,
-            profile: originalPost.authorProfile,
-            profileImageUrl: originalPost.authorImageUrl,
-        } : {
-            name: post.authorName,
-            handle: post.authorHandle,
-            color: post.authorColor,
-            profile: post.authorProfile,
-            profileImageUrl: post.authorImageUrl,
-        };
+const postProfile = isSimpleRetweet && originalPost ? {
+  name: originalPost.authorName,
+  handle: originalPost.authorHandle,
+  color: originalPost.authorColor,
+  profile: originalPost.authorProfile,
+  profileImageUrl:
+    originalPost.authorImageUrl ||
+    (originalPost.authorProfile === '5'
+      ? 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'
+      : ''),
+} : {
+  name: post.authorName,
+  handle: post.authorHandle,
+  color: post.authorColor,
+  profile: post.authorProfile,
+  profileImageUrl:
+    post.authorImageUrl ||
+    (post.authorProfile === '5'
+      ? 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'
+      : ''),
+};
 
         // [1. 새 게시글 팝 애니메이션] - useEffect 수정 (1.2s로 변경)
         useEffect(() => {
@@ -2474,4 +2483,5 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
