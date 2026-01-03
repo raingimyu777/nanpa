@@ -205,7 +205,13 @@ const MOCK_USERS = [
     };
 
     const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
-        const hasImage = profile.profileImageUrl && profile.profileImageUrl.startsWith('http');
+        const imageUrl =
+  profile.profileImageUrl ||
+  (profile.handle === 'user5'
+    ? 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'
+    : '');
+
+const hasImage = imageUrl.startsWith('http');
         
         const handleImageError = (e, profile) => {
             e.target.style.display = 'none'; 
@@ -239,7 +245,7 @@ const MOCK_USERS = [
             >
                 {hasImage ? (
                     <img 
-                        src={profile.profileImageUrl} 
+                        src={imageUrl}
                         alt={`${profile.name} profile`} 
                         className="w-full h-full object-cover"
                         onError={(e) => handleImageError(e, profile)}
@@ -2468,3 +2474,4 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
