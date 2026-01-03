@@ -211,7 +211,9 @@ const imageUrl =
     ? 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'
     : '');
 
-const hasImage = imageUrl.startsWith('http');
+const hasImage =
+  imageUrl.startsWith('http') || profile.profile === '5';
+
 
         
         const handleImageError = (e, profile) => {
@@ -2480,6 +2482,7 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
 
