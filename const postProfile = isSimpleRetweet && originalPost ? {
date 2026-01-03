@@ -891,23 +891,18 @@ const MOCK_USERS = [
             p.authorId === App.currentUserId
         );
 
-      const baseUser =
-  MOCK_USERS.find(u => u.uid === post.authorId) || {};
-
-const postProfile = isSimpleRetweet && originalPost ? {
+      const postProfile = isSimpleRetweet && originalPost ? {
   name: originalPost.authorName,
   handle: originalPost.authorHandle,
   color: originalPost.authorColor,
   profile: originalPost.authorProfile,
-  profileImageUrl:
-    originalPost.authorImageUrl || baseUser.profileImageUrl || '',
+  profileImageUrl: originalPost.authorImageUrl,
 } : {
   name: post.authorName,
   handle: post.authorHandle,
   color: post.authorColor,
   profile: post.authorProfile,
-  profileImageUrl:
-    post.authorImageUrl || baseUser.profileImageUrl || '',
+  profileImageUrl: post.authorImageUrl,
 };
 
         // [1. 새 게시글 팝 애니메이션] - useEffect 수정 (1.2s로 변경)
@@ -2472,6 +2467,7 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
 
