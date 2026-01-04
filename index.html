@@ -204,11 +204,27 @@ const MOCK_USERS = [
         });
     };
 
-    const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
-    const imageUrl = profile.profileImageUrl || '';
-    const hasImage = imageUrl.startsWith('http');
-        
-        const handleImageError = (e, profile) => {
+  const ProfilePictureDisplay = ({
+  profile,
+  sizeClass = 'w-10 h-10',
+  textSizeClass = 'text-lg',
+  isSmall = false
+}) => {
+
+  const currentUser = MOCK_USERS.find(u =>
+    (profile.uid && u.uid === profile.uid) ||
+    (profile.handle && u.handle === profile.handle) ||
+    (profile.name && u.name === profile.name)
+  );
+
+  const imageUrl =
+    currentUser?.profileImageUrl ||
+    profile.profileImageUrl ||
+    '';
+
+  const hasImage = imageUrl.startsWith('http');
+
+  const handleImageError = (e, profile) => {
             e.target.style.display = 'none'; 
             const parentDiv = e.target.parentElement;
             const colorClass = profile.color.split('-').slice(1, 3).join('-');
@@ -2480,6 +2496,7 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
 
