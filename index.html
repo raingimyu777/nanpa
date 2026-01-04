@@ -457,12 +457,15 @@ const MOCK_USERS = [
             handle: '사용자',
             profileImageUrl: '' 
         };
-        
+
+        const currentUser = MOCK_USERS.find(
+    u => u.handle === post.authorHandle
+);
         const postProfile = {
             name: post.authorName,
             handle: post.authorHandle,
             profile: post.authorProfile,
-            profileImageUrl: post.authorImageUrl,
+            profileImageUrl: currentUser?.profileImageUrl || post.authorImageUrl || '',
             color: post.authorColor,
         };
         
@@ -827,11 +830,14 @@ const MOCK_USERS = [
     const QuotedPost = ({ originalPost, onThreadSelect }) => {
         if (!originalPost) return null;
 
+        const currentUser = MOCK_USERS.find(
+    u => u.handle === originalPost.authorHandle
+);
         const postProfile = {
             name: originalPost.authorName,
             handle: originalPost.authorHandle,
             profile: originalPost.authorProfile,
-            profileImageUrl: originalPost.authorImageUrl,
+            profileImageUrl: currentUser?.profileImageUrl || originalPost.authorImageUrl || '',
             color: originalPost.authorColor,
         };
         
@@ -2468,4 +2474,5 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
