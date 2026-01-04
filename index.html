@@ -459,16 +459,21 @@ const MOCK_USERS = [
             profileImageUrl: '' 
         };
 
-        const currentUser = MOCK_USERS.find(
-    u => u.handle === post.authorHandle
+const currentUser = MOCK_USERS.find(u =>
+  (post.authorUid && u.uid === post.authorUid) ||
+  (post.authorHandle && u.handle === post.authorHandle) ||
+  (post.authorName && u.name === post.authorName)
 );
-        const postProfile = {
-            name: post.authorName,
-            handle: post.authorHandle,
-            profile: post.authorProfile,
-            profileImageUrl: currentUser?.profileImageUrl || post.authorImageUrl || '',
-            color: post.authorColor,
-        };
+
+const postProfile = {
+  name: post.authorName,
+  handle: post.authorHandle,
+  profile: post.authorProfile,
+  profileImageUrl:
+    currentUser?.profileImageUrl || post.authorImageUrl || '',
+  color: post.authorColor,
+};
+
         
       const handleReplySubmit = (e) => {
     e.preventDefault();
@@ -2475,6 +2480,7 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
 
