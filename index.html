@@ -20,7 +20,7 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                     },
-                    // [1. ??寃뚯떆湲 ???좊땲硫붿씠??????遺?쒕읇寃??섏젙 (0.7s -> 1.2s)
+                    // [1. 새 게시글 팝 애니메이션]을 더 부드럽게 수정 (0.7s -> 1.2s)
                     keyframes: {
                         'pulse-once': {
                             '0%': { opacity: 0, transform: 'translateY(-10px)', backgroundColor: 'transparent' },
@@ -34,8 +34,8 @@
                         }
                     },
                     animation: {
-                        'pulse-once': 'pulse-once 1.2s ease-out', // 1.2s濡?蹂寃?
-                        'dark-pulse-once': 'dark-pulse-once 1.2s ease-out', // 1.2s濡?蹂寃?
+                        'pulse-once': 'pulse-once 1.2s ease-out', // 1.2s로 변경
+                        'dark-pulse-once': 'dark-pulse-once 1.2s ease-out', // 1.2s로 변경
                     }
                 },
             }
@@ -59,7 +59,7 @@
 
 <script type="text/babel">
     const { useState, useEffect, useCallback, useMemo, useRef } = React;
-// ?뵒 ?덉쟾??"?? ?뚮━ (?꾩뿭 ?좏떥: ?대뵒?쒕뱺 ?몄텧 媛??
+// 🔔 안전한 "띵" 소리 (전역 유틸: 어디서든 호출 가능)
 function getAudioCtx() {
   try {
     if (window.__dingCtx) return window.__dingCtx;
@@ -87,8 +87,8 @@ function playDing() {
     const gain = ctx.createGain();
     const now = ctx.currentTime;
 
-    osc.type = 'sine';                 // 遺?쒕윭???쒖닔??
-    osc.frequency.setValueAtTime(880, now); // A5 (?? = "??
+    osc.type = 'sine';                 // 부드러운 순수톤
+    osc.frequency.setValueAtTime(880, now); // A5 (라) = "띵"
     gain.gain.setValueAtTime(0.2, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
 
@@ -102,7 +102,7 @@ function playDing() {
   }
 }
 
-    // ?좏떥由ы떚 ?⑥닔: SHA-256 ?댁떆 ?앹꽦 (鍮꾨?踰덊샇 蹂댁븞??
+    // 유틸리티 함수: SHA-256 해시 생성 (비밀번호 보안용)
     const sha256 = async (str) => {
         const buffer = new TextEncoder().encode(str);
         const hash = await crypto.subtle.digest('SHA-256', buffer);
@@ -110,25 +110,25 @@ function playDing() {
         return hex;
     };
     
-    // Lucide ?꾩씠肄??뺤쓽
+    // Lucide 아이콘 정의
     const Lucide = window.LucideReact || {};
     
-    const LogOut = Lucide.LogOut || '?슞'; 
-    const MessageSquare = Lucide.MessageSquare || '?뮠'; 
-    const Loader = Lucide.Loader || '??; 
-    const AlertTriangle = Lucide.AlertTriangle || '?좑툘';
-    const ChevronDown = Lucide.ChevronDown || '??;
-    const ChevronUp = Lucide.ChevronUp || '??;
-    const Home = Lucide.Home || '?룧';
-    const Heart = Lucide.Heart || '?ㅿ툘';
-    const Bookmark = Lucide.Bookmark || '??;
-    const RepeatIcon = Lucide.Repeat2 || '??;
-    const Image = Lucide.Image || '?뼹截?;
-    const X = Lucide.X || '??;
-    const ArrowLeft = Lucide.ArrowLeft || '??;
-    const Bell = Lucide.Bell || '?뵒';
-    const Sun = Lucide.Sun || '??;
-    const Moon = Lucide.Moon || '??;
+    const LogOut = Lucide.LogOut || '🚪'; 
+    const MessageSquare = Lucide.MessageSquare || '💬'; 
+    const Loader = Lucide.Loader || '↻'; 
+    const AlertTriangle = Lucide.AlertTriangle || '⚠️';
+    const ChevronDown = Lucide.ChevronDown || '▼';
+    const ChevronUp = Lucide.ChevronUp || '▲';
+    const Home = Lucide.Home || '🏠';
+    const Heart = Lucide.Heart || '❤️';
+    const Bookmark = Lucide.Bookmark || '☆';
+    const RepeatIcon = Lucide.Repeat2 || '⇆';
+    const Image = Lucide.Image || '🖼️';
+    const X = Lucide.X || '❌';
+    const ArrowLeft = Lucide.ArrowLeft || '←';
+    const Bell = Lucide.Bell || '🔔';
+    const Sun = Lucide.Sun || '☼';
+    const Moon = Lucide.Moon || '☽';
 
 const hardcodedFirebaseConfig = {
   apiKey: "AIzaSyCdkscN8L-0jN9Z3ySw8g6UsuqNytS_IbI",
@@ -165,18 +165,22 @@ const hardcodedFirebaseConfig = {
 
     const getInitialActiveUser = () => localStorage.getItem(ACTIVE_USER_STORAGE_KEY);
     
-//洹몃９怨??몄썝異붽?瑜?留뚯?怨??띕떎硫??ш린瑜??섏젙?섏꽭??
+//그룹과 인원추가를 만지고 싶다면 여기를 수정하세요
 const MOCK_GROUPS = [
-    { id: 'group1', name: '?쒗뙆', icon: '?쨴?뮏' },
-    { id: 'group2', name: '釉붾（??, icon: '?뼡?뮋' },
-    { id: 'group3', name: '湲고?', icon: '?뭽' },
+    { id: 'group1', name: '난파', icon: '🤎💜' },
+    { id: 'group2', name: '블루토', icon: '🖤💙' },
+    { id: 'group3', name: '기타', icon: '💌' },
 ];
 
 const MOCK_USERS = [
-    { uid: 'user-001', name: '????, handle: 'user1', color: 'bg-gray-500', profile: '2', group: 'group1' },
-    { uid: 'user-002', name: '?뚯씠??, handle: 'user2', color: 'bg-gray-500', profile: '2', group: 'group1' },
-    { uid: 'user-005', name: '?뚮（??, handle: 'user5', color: 'bg-gray-500', profile: '5', group: 'group2', profileImageUrl: 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'},
-    { uid: 'user-006', name: '釉붾（ 誘?, handle: 'user6', color: 'bg-gray-500', profile: '6', group: 'group2' },
+    { uid: 'user-007', name: '이 난', handle: 'user7', color: 'bg-gray-500', profile: '2', group: 'group1'  },
+    { uid: 'user-008', name: '파이톤', handle: 'user8', color: 'bg-gray-500', profile: '2', group: 'group1' },
+   // 윗 이난 파이톤 : 오리진
+     { uid: 'user-001', name: '이 난', handle: 'user1', color: 'bg-gray-500', profile: '2', group: 'group1' },
+    { uid: 'user-002', name: '파이톤', handle: 'user2', color: 'bg-gray-500', profile: '2', group: 'group1' },
+   // 윗 이난 파이톤 : 청춘AU
+    { uid: 'user-005', name: '플루토', handle: 'user5', color: 'bg-gray-500', profile: '5', group: 'group2', profileImageUrl: 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'},
+    { uid: 'user-006', name: '블루 민', handle: 'user6', color: 'bg-gray-500', profile: '6', group: 'group2' },
     { uid: 'user-003', name: 'Story', handle: 'user3', color: 'bg-gray-500', profile: '3', group: 'group3' },
     { uid: 'user-004', name: 'NPC', handle: 'user4', color: 'bg-gray-500', profile: '4', group: 'group3' },
 
@@ -185,10 +189,10 @@ const MOCK_USERS = [
     const EXAMPLE_IMAGE_URL = 'https://i.imgur.com/KDTgHmT.png';
     
     const VIEW_OPTIONS = [
-        { id: 'timeline', name: '??꾨씪??, icon: Home, emptyMessage: '?꾩쭅 寃뚯떆臾쇱씠 ?놁뒿?덈떎. 泥?踰덉㎏ ?몄쐵???묒꽦??蹂댁꽭??' },
-        { id: 'notifications', name: '?뚮┝', icon: Bell, emptyMessage: '?꾩쭅 諛쏆? ?뚮┝???놁뒿?덈떎.' },
-        { id: 'likes', name: '醫뗭븘??, icon: Heart, emptyMessage: '醫뗭븘?붾? ?꾨Ⅸ 寃뚯떆臾쇱씠 ?놁뒿?덈떎.' },
-        { id: 'bookmarks', name: '遺곷쭏??, icon: Bookmark, emptyMessage: '遺곷쭏?ы븳 寃뚯떆臾쇱씠 ?놁뒿?덈떎.' },
+        { id: 'timeline', name: '타임라인', icon: Home, emptyMessage: '아직 게시물이 없습니다. 첫 번째 트윗을 작성해 보세요!' },
+        { id: 'notifications', name: '알림', icon: Bell, emptyMessage: '아직 받은 알림이 없습니다.' },
+        { id: 'likes', name: '좋아요', icon: Heart, emptyMessage: '좋아요를 누른 게시물이 없습니다.' },
+        { id: 'bookmarks', name: '북마크', icon: Bookmark, emptyMessage: '북마크한 게시물이 없습니다.' },
     ];
 
     const renderContentWithMentions = (content) => {
@@ -268,7 +272,7 @@ const MOCK_USERS = [
         );
     };
 
-    // [2. ?꾨줈??鍮꾨?踰덊샇] - 鍮꾨?踰덊샇 ?낅젰 紐⑤떖
+    // [2. 프로필 비밀번호] - 비밀번호 입력 모달
     const PasswordModal = ({ user, onConfirm, onCancel }) => {
         const [password, setPassword] = useState('');
         const [error, setError] = useState('');
@@ -278,7 +282,7 @@ const MOCK_USERS = [
             setError('');
             
             if (!password) {
-                return setError('鍮꾨?踰덊샇瑜??낅젰??二쇱꽭??');
+                return setError('비밀번호를 입력해 주세요.');
             }
             
             const hashedInput = await sha256(password);
@@ -286,7 +290,7 @@ const MOCK_USERS = [
             if (hashedInput === user.passwordHash) {
                 onConfirm(user);
             } else {
-                setError('鍮꾨?踰덊샇媛 ?쇱튂?섏? ?딆뒿?덈떎.');
+                setError('비밀번호가 일치하지 않습니다.');
             }
         };
 
@@ -294,10 +298,10 @@ const MOCK_USERS = [
             <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-sm p-6 transform transition-all">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 border-b pb-2">
-                        @{user.handle}?섏쑝濡?濡쒓렇??
+                        @{user.handle}님으로 로그인
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                        ???꾨줈?꾩? 鍮꾨?踰덊샇濡?蹂댄샇?섏뼱 ?덉뒿?덈떎.
+                        이 프로필은 비밀번호로 보호되어 있습니다.
                     </p>
 
                     <form onSubmit={handleLogin}>
@@ -310,7 +314,7 @@ const MOCK_USERS = [
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="鍮꾨?踰덊샇 ?낅젰"
+                            placeholder="비밀번호 입력"
                             className="w-full p-3 text-base border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         />
                         
@@ -324,14 +328,14 @@ const MOCK_USERS = [
                                 onClick={onCancel}
                                 className="px-4 py-2 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                             >
-                                痍⑥냼
+                                취소
                             </button>
                             <button
                                 type="submit"
                                 className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition disabled:opacity-50"
                                 disabled={!password}
                             >
-                                濡쒓렇??
+                                로그인
                             </button>
                         </div>
                     </form>
@@ -363,7 +367,7 @@ const MOCK_USERS = [
         return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md p-6 transform transition-all">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 border-b pb-2">?몄슜?섏뿬 ?몄쐵?섍린</h3>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 border-b pb-2">인용하여 트윗하기</h3>
 
                     <form onSubmit={handleQuotePost}>
                         <div className="flex items-start mb-4">
@@ -379,7 +383,7 @@ const MOCK_USERS = [
     e.target.style.height = e.target.scrollHeight + 'px';
   }}
   style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
-  placeholder="?몄슜???댁슜???낅젰?섏꽭??"
+  placeholder="인용할 내용을 입력하세요."
   className="flex-grow p-2 text-base border-b border-gray-200 focus:outline-none focus:border-blue-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 resize-none overflow-hidden"
   rows="2"
 />
@@ -392,7 +396,7 @@ const MOCK_USERS = [
                                 className="flex items-center text-blue-500 hover:text-blue-600 transition text-sm font-medium"
                             >
                                 {typeof Image === 'string' ? <span className="mr-1">{Image}</span> : <Image size={16} className="mr-1" />}
-                                ?대?吏 二쇱냼 泥⑤?
+                                이미지 주소 첨부
                             </button>
                             {imageUrl && (
                                 <button
@@ -401,7 +405,7 @@ const MOCK_USERS = [
                                     className="flex items-center text-red-500 hover:text-red-600 transition text-xs"
                                 >
                                     {typeof X === 'string' ? <span className="mr-1">{X}</span> : <X size={12} className="mr-1" />}
-                                    泥⑤? 痍⑥냼
+                                    첨부 취소
                                 </button>
                             )}
                         </div>
@@ -412,14 +416,14 @@ const MOCK_USERS = [
                                     type="url"
                                     value={imageUrl}
                                     onChange={(e) => setImageUrl(e.target.value)}
-                                    placeholder="?대?吏 二쇱냼(URL)瑜??낅젰?섏꽭?? (?? https://i.imgur.com/example.jpg)"
+                                    placeholder="이미지 주소(URL)를 입력하세요. (예: https://i.imgur.com/example.jpg)"
                                     className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 />
                             </div>
                         )}
                         {imageUrl && (
                             <div className="mb-4 max-h-40 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
-                                <img src={imageUrl} alt="誘몃━蹂닿린" className="w-full object-cover" />
+                                <img src={imageUrl} alt="미리보기" className="w-full object-cover" />
                             </div>
                         )}
 
@@ -436,14 +440,14 @@ const MOCK_USERS = [
                                 onClick={onCancel}
                                 className="px-4 py-2 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                             >
-                                痍⑥냼
+                                취소
                             </button>
                             <button
                                 type="submit"
                                 className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition disabled:opacity-50"
                                 disabled={!currentUserId || (content.trim() === "" && imageUrl.trim() === "")}
                             >
-                                ?몄슜 ?몄쐵
+                                인용 트윗
                             </button>
                         </div>
                     </form>
@@ -469,9 +473,9 @@ const MOCK_USERS = [
         }, []);
         
         const formProfile = currentUserProfile || { 
-            profile: '?뫀', 
+            profile: '👤', 
             color: 'bg-gray-500', 
-            handle: '?ъ슜??,
+            handle: '사용자',
             profileImageUrl: '' 
         };
 
@@ -495,7 +499,7 @@ const postProfile = {
     e.preventDefault();
     onReply(replyContent, post.id, null, imageUrl.trim()); 
 
-    // ?뵒 ?뚮━ ?ъ깮
+    // 🔔 소리 재생
 
     onCancel();
 };
@@ -510,7 +514,7 @@ const postProfile = {
                         >
                             {typeof ArrowLeft === 'string' ? <span className="text-xl text-gray-700 dark:text-gray-300">{ArrowLeft}</span> : <ArrowLeft size={20} className="text-gray-700 dark:text-gray-300" />}
                         </button>
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white ml-4">?듦? ?묒꽦</h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white ml-4">답글 작성</h3>
                     </div>
 
                     <div className="p-4">
@@ -527,12 +531,12 @@ const postProfile = {
                                 
                                 {post.imageUrl && (
                                     <div className="mt-2 max-h-32 overflow-hidden rounded-xl">
-                                        <img src={post.imageUrl} alt="泥⑤? ?대?吏" className="w-full object-cover" />
+                                        <img src={post.imageUrl} alt="첨부 이미지" className="w-full object-cover" />
                                     </div>
                                 )}
 
                                 <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-                                    <span className="text-blue-500">@{post.authorHandle}</span>?섏뿉寃??듦? 以?
+                                    <span className="text-blue-500">@{post.authorHandle}</span>님에게 답글 중
                                 </p>
                             </div>
                         </div>
@@ -551,7 +555,7 @@ const postProfile = {
     e.target.style.height = e.target.scrollHeight + 'px';
   }}
   style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
-  placeholder="?듦????낅젰?섏꽭??"
+  placeholder="답글을 입력하세요."
   className="flex-grow p-2 text-base border-b ... resize-none overflow-hidden"
   rows="2"
   disabled={!currentUserId}
@@ -566,14 +570,14 @@ const postProfile = {
                                         className="flex items-center text-blue-500 hover:text-blue-600 transition text-sm font-medium"
                                     >
                                         {typeof Image === 'string' ? <span className="mr-1">{Image}</span> : <Image size={16} className="mr-1" />}
-                                        ?대?吏 二쇱냼 泥⑤?
+                                        이미지 주소 첨부
                                     </button>
                                     <button
                                       type="submit"
                                       className="ml-2 px-3 py-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition disabled:opacity-50 font-semibold"
                                       disabled={!currentUserId || (replyContent.trim() === "" && imageUrl.trim() === "")}
                                     >
-                                      ?듦?
+                                      답글
                                     </button>
                                 </div>
                                 
@@ -583,7 +587,7 @@ const postProfile = {
                                             type="url"
                                             value={imageUrl}
                                             onChange={(e) => setImageUrl(e.target.value)}
-                                            placeholder="?대?吏 二쇱냼(URL)瑜??낅젰?섏꽭??"
+                                            placeholder="이미지 주소(URL)를 입력하세요."
                                             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                         />
                                     </div>
@@ -592,7 +596,7 @@ const postProfile = {
                                     <div className="mb-2 max-h-40 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 relative">
                                         <img 
                                             src={imageUrl} 
-                                            alt="誘몃━蹂닿린" 
+                                            alt="미리보기" 
                                             className="w-full object-cover" 
                                             onError={(e) => {e.target.style.display='none';}}
                                         />
@@ -622,17 +626,17 @@ const postProfile = {
             <div className="bg-white dark:bg-gray-700 rounded-xl shadow-2xl w-full max-w-md p-6 transform transition-all">
               <div className="flex items-center space-x-3 mb-4">
                 {typeof AlertIcon === 'string' ? <span className="text-red-500 text-2xl">{AlertIcon}</span> : <AlertIcon className="text-red-500 flex-shrink-0" size={24} />}
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">寃뚯떆臾???젣 ?뺤씤</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">게시물 삭제 확인</h3>
               </div>
               <p className="text-gray-600 dark:text-gray-300 mb-4">
-                ?뺣쭚濡???寃뚯떆臾쇱쓣 ??젣?섏떆寃좎뒿?덇퉴? ???묒뾽? ?섎룎由????놁뒿?덈떎.
+                정말로 이 게시물을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
               </p>
               <div className="border-l-4 border-red-300 pl-3 py-2 mb-6 bg-red-50 dark:bg-gray-800 rounded-md">
-                <p className="font-semibold text-gray-800 dark:text-gray-200">@{post.authorHandle}??寃뚯떆臾?</p>
+                <p className="font-semibold text-gray-800 dark:text-gray-200">@{post.authorHandle}의 게시물:</p>
                 <p className="text-sm italic text-gray-600 dark:text-gray-400 mt-1 max-h-24 overflow-hidden whitespace-pre-wrap">{post.content}</p>
                 {post.imageUrl && (
                     <div className="mt-2 max-h-20 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
-                        <img src={post.imageUrl} alt="泥⑤? ?대?吏" className="w-full object-cover" />
+                        <img src={post.imageUrl} alt="첨부 이미지" className="w-full object-cover" />
                     </div>
                 )}
               </div>
@@ -641,13 +645,13 @@ const postProfile = {
                   onClick={onCancel}
                   className="px-4 py-2 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                 >
-                  痍⑥냼
+                  취소
                 </button>
                 <button
                   onClick={onConfirm}
                   className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-lg shadow-red-500/50"
                 >
-                  ??젣?섍린
+                  삭제하기
                 </button>
               </div>
             </div>
@@ -673,9 +677,9 @@ const postProfile = {
         const isPasswordChanged = newPassword.length > 0;
         const isPasswordValid = isPasswordChanged && newPassword === confirmPassword;
         
-        // 蹂寃쎌씠 ?녿뒗 寃쎌슦 ???踰꾪듉 鍮꾪솢?깊솕
+        // 변경이 없는 경우 저장 버튼 비활성화
         const isDataUnchanged = !isInfoChanged && !isPasswordChanged;
-        // 鍮꾨?踰덊샇瑜?蹂寃쏀븯?붾뜲 湲곗〈 鍮꾨?踰덊샇媛 ??멸굅????鍮꾨?踰덊샇媛 ?좏슚?섏? ?딆? 寃쎌슦 ???踰꾪듉 鍮꾪솢?깊솕
+        // 비밀번호를 변경하는데 기존 비밀번호가 틀렸거나 새 비밀번호가 유효하지 않은 경우 저장 버튼 비활성화
         const isPasswordError = isPasswordChanged && (!isPasswordValid || (isPasswordSet && !oldPassword));
         const isDisabled = !isHandleValid || !isNameValid || isDataUnchanged || isPasswordError;
 
@@ -683,12 +687,12 @@ const postProfile = {
             setError('');
             if (isPasswordChanged) {
                 if (newPassword !== confirmPassword) {
-                    return setError('??鍮꾨?踰덊샇? ?뺤씤 鍮꾨?踰덊샇媛 ?쇱튂?섏? ?딆뒿?덈떎.');
+                    return setError('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
                 }
                 if (isPasswordSet) {
                     const hashedOld = await sha256(oldPassword);
                     if (hashedOld !== currentPasswordHash) {
-                        return setError('湲곗〈 鍮꾨?踰덊샇媛 ?쇱튂?섏? ?딆뒿?덈떎.');
+                        return setError('기존 비밀번호가 일치하지 않습니다.');
                     }
                 }
             }
@@ -707,14 +711,14 @@ const postProfile = {
                 });
             } catch (e) {
                 console.error("Profile Save Error:", e);
-                setError('???以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.');
+                setError('저장 중 오류가 발생했습니다.');
             }
         };
 
         return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                 <div className="bg-white dark:bg-gray-700 rounded-xl shadow-2xl w-full max-w-md p-6">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 border-b pb-2">?꾨줈???섏젙</h3>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 border-b pb-2">프로필 수정</h3>
 
                     <div className="flex flex-col items-center mb-6">
                         <div className="w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-3">
@@ -729,20 +733,20 @@ const postProfile = {
                     <div className="space-y-4 mb-6">
                         <div className="border-b pb-2 dark:border-gray-600">
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                ?꾨줈???대?吏 URL
-                                <span className="text-xs text-gray-400 ml-2">(?? {EXAMPLE_IMAGE_URL})</span>
+                                프로필 이미지 URL
+                                <span className="text-xs text-gray-400 ml-2">(예: {EXAMPLE_IMAGE_URL})</span>
                             </label>
                             <input
                                 type="url"
                                 value={profileImageUrl}
                                 onChange={(e) => setProfileImageUrl(e.target.value)}
                                 className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                                placeholder="?대?吏 二쇱냼瑜??낅젰?섏꽭??(?좏깮 ?ы빆)"
+                                placeholder="이미지 주소를 입력하세요 (선택 사항)"
                             />
                         </div>
 
                         <div className="border-b pb-2 dark:border-gray-600">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">?대쫫</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">이름</label>
                             <input
                                 type="text"
                                 value={name}
@@ -753,7 +757,7 @@ const postProfile = {
                         </div>
 
                         <div className="border-b pb-2 dark:border-gray-600">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">?꾩씠??(Handle)</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">아이디 (Handle)</label>
                             <div className="flex">
                                 <span className="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300">@</span>
                                 <input
@@ -762,52 +766,52 @@ const postProfile = {
                                     onChange={(e) => setHandle(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
                                     className={`flex-1 p-2 border border-gray-300 rounded-r-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:ring-blue-500 focus:border-blue-500 ${!isHandleValid && handle.length > 0 ? 'border-red-500' : ''}`}
                                     maxLength="15"
-                                    placeholder="?곷Ц, ?レ옄, 諛묒쨪留?媛??
+                                    placeholder="영문, 숫자, 밑줄만 가능"
                                 />
                             </div>
-                            {!isHandleValid && handle.length > 0 && <p className="text-xs text-red-500 mt-1">?꾩씠?붾뒗 ?곷Ц, ?レ옄, 諛묒쨪(_)留?媛?ν빀?덈떎.</p>}
+                            {!isHandleValid && handle.length > 0 && <p className="text-xs text-red-500 mt-1">아이디는 영문, 숫자, 밑줄(_)만 가능합니다.</p>}
                         </div>
                     </div>
                     
-                    {/* [2. ?꾨줈??鍮꾨?踰덊샇] - 鍮꾨?踰덊샇 ?ㅼ젙 ?뱀뀡 */}
+                    {/* [2. 프로필 비밀번호] - 비밀번호 설정 섹션 */}
                     <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-600 space-y-3">
-                        <h4 className="font-bold text-gray-800 dark:text-white">{isPasswordSet ? '鍮꾨?踰덊샇 蹂寃? : '鍮꾨?踰덊샇 ?ㅼ젙 (?좏깮 ?ы빆)'}</h4>
+                        <h4 className="font-bold text-gray-800 dark:text-white">{isPasswordSet ? '비밀번호 변경' : '비밀번호 설정 (선택 사항)'}</h4>
                         
                         {isPasswordSet && (
                             <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400">湲곗〈 鍮꾨?踰덊샇</label>
+                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400">기존 비밀번호</label>
                                 <input
                                     type="password"
                                     value={oldPassword}
                                     onChange={(e) => setOldPassword(e.target.value)}
                                     className="mt-1 w-full p-2 text-sm border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    placeholder="湲곗〈 鍮꾨?踰덊샇"
+                                    placeholder="기존 비밀번호"
                                 />
                             </div>
                         )}
                         
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400">{isPasswordSet ? '??鍮꾨?踰덊샇' : '鍮꾨?踰덊샇'}</label>
+                            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400">{isPasswordSet ? '새 비밀번호' : '비밀번호'}</label>
                             <input
                                 type="password"
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 className="mt-1 w-full p-2 text-sm border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                placeholder={isPasswordSet ? "??鍮꾨?踰덊샇 (蹂寃????섎젮硫?鍮꾩썙?먯꽭??" : "鍮꾨?踰덊샇"}
+                                placeholder={isPasswordSet ? "새 비밀번호 (변경 안 하려면 비워두세요)" : "비밀번호"}
                             />
                         </div>
                         
                         {isPasswordChanged && (
                             <div>
-                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400">??鍮꾨?踰덊샇 ?뺤씤</label>
+                                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400">새 비밀번호 확인</label>
                                 <input
                                     type="password"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     className="mt-1 w-full p-2 text-sm border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    placeholder="鍮꾨?踰덊샇 ?뺤씤"
+                                    placeholder="비밀번호 확인"
                                 />
-                                {newPassword !== confirmPassword && <p className="text-xs text-red-500 mt-1">鍮꾨?踰덊샇媛 ?쇱튂?섏? ?딆뒿?덈떎.</p>}
+                                {newPassword !== confirmPassword && <p className="text-xs text-red-500 mt-1">비밀번호가 일치하지 않습니다.</p>}
                             </div>
                         )}
                         {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
@@ -818,14 +822,14 @@ const postProfile = {
                             onClick={onCancel}
                             className="px-4 py-2 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                         >
-                            痍⑥냼
+                            취소
                         </button>
                         <button
                             onClick={handleSave}
                             className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition disabled:opacity-50"
                             disabled={isDisabled}
                         >
-                            ???
+                            저장
                         </button>
                     </div>
                 </div>
@@ -834,7 +838,7 @@ const postProfile = {
     };
 
     const formatTimestamp = (date) => {
-        if (!date || isNaN(date.getTime())) return '諛⑷툑 ??;
+        if (!date || isNaN(date.getTime())) return '방금 전';
         const now = new Date();
         const diff = now.getTime() - date.getTime();
         const seconds = Math.floor(diff / 1000);
@@ -842,10 +846,10 @@ const postProfile = {
         const hours = Math.floor(minutes / 60);
         const days = Math.floor(hours / 24);
 
-        if (seconds < 60) return `${seconds}珥???;
-        if (minutes < 60) return `${minutes}遺???;
-        if (hours < 24) return `${hours}?쒓컙 ??;
-        if (days < 7) return `${days}????;
+        if (seconds < 60) return `${seconds}초 전`;
+        if (minutes < 60) return `${minutes}분 전`;
+        if (hours < 24) return `${hours}시간 전`;
+        if (days < 7) return `${days}일 전`;
         return date.toLocaleDateString('ko-KR');
     };
 
@@ -878,7 +882,7 @@ const postProfile = {
                     <div className="mt-2 max-h-40 overflow-hidden rounded-xl">
                         <img 
                             src={originalPost.imageUrl} 
-                            alt="泥⑤? ?대?吏" 
+                            alt="첨부 이미지" 
                             className="w-full h-auto object-cover border border-gray-300 dark:border-gray-600"
                         />
                     </div>
@@ -933,16 +937,16 @@ const postProfile = {
             profileImageUrl: post.authorImageUrl,
         };
 
-        // [1. ??寃뚯떆湲 ???좊땲硫붿씠?? - useEffect ?섏젙 (1.2s濡?蹂寃?
+        // [1. 새 게시글 팝 애니메이션] - useEffect 수정 (1.2s로 변경)
         useEffect(() => {
-            // ??寃뚯떆臾쇱씠 ??꾨씪?몄뿉 異붽??섏뿀???뚮쭔 ?좊땲硫붿씠???곸슜
+            // 새 게시물이 타임라인에 추가되었을 때만 애니메이션 적용
             if (post.id === newPostId && !hasFlashed.current && !isThreadView) { 
                 setIsFlashing(true);
                 hasFlashed.current = true;
                 const timer = setTimeout(() => {
                     setIsFlashing(false);
                     if (onNewPostAnimated) onNewPostAnimated();
-                }, 1250); // ?좊땲硫붿씠???쒓컙 (1.2s蹂대떎 ?쎄컙 湲멸쾶)
+                }, 1250); // 애니메이션 시간 (1.2s보다 약간 길게)
                 return () => clearTimeout(timer);
             }
             if (newPostId === null && isFlashing) {
@@ -964,7 +968,7 @@ const postProfile = {
         
         const hasReplies = replies.length > 0;
         
-        // [1. ??寃뚯떆湲 ???좊땲硫붿씠?? - ?대옒???곸슜
+        // [1. 새 게시글 팝 애니메이션] - 클래스 적용
         const animationClass = isFlashing ? 'animate-pulse-once dark:animate-dark-pulse-once' : '';
 
         const handlePostClick = (e) => {
@@ -1000,9 +1004,9 @@ const postProfile = {
         const finalDrawTopLine = drawTopLine !== undefined ? drawTopLine : props.hasParent;
         const finalDrawBottomLine = drawBottomLine !== undefined ? drawBottomLine : hasReplies;
         
-        // [2. ?볤? ?ㅻ젅??援щ텇??蹂듦뎄] - ?ㅻ젅??酉곗씪吏?쇰룄, ??볤?(replyToId媛 ?덈뒗 寃쎌슦)???꾨땲硫?寃쎄퀎?좎쓣 ?쒖떆?⑸땲??
-        // isThreadView && post.replyToId 媛 李몄씪 寃쎌슦 (利? ?볤????볤???寃쎌슦)?먮쭔 寃쎄퀎?좎쓣 ?쒓굅?⑸땲??
-        // isMainFocus????긽 border-b瑜??쒖떆?댁빞 ?ㅻ젅???쒕ぉ ??븷???⑸땲??
+        // [2. 댓글 스레드 구분선 복구] - 스레드 뷰일지라도, 대댓글(replyToId가 있는 경우)이 아니면 경계선을 표시합니다.
+        // isThreadView && post.replyToId 가 참일 경우 (즉, 댓글의 댓글인 경우)에만 경계선을 제거합니다.
+        // isMainFocus는 항상 border-b를 표시해야 스레드 제목 역할을 합니다.
         const shouldHaveBorder = !isThreadView || isMainFocus || (isThreadView && !post.replyToId);
         const borderClass = shouldHaveBorder ? `border-b border-gray-100 dark:border-gray-800` : '';
 
@@ -1011,7 +1015,7 @@ const postProfile = {
                 {isSimpleRetweet && originalPost && (
                     <div className="flex items-center text-green-500 text-xs font-semibold px-4 pt-2 dark:text-green-400 cursor-default">
                         {typeof RepeatIcon === 'string' ? <span className="mr-1 text-sm">{RepeatIcon}</span> : <RepeatIcon size={14} className="mr-1" />}
-                        <span>{post.authorName}?섏씠 由ы듃?쀭뻽?듬땲??</span>
+                        <span>{post.authorName}님이 리트윗했습니다.</span>
                     </div>
                 )}
                 <div
@@ -1053,7 +1057,7 @@ const postProfile = {
                                         <span className="truncate">
                                             @{isSimpleRetweet && originalPost ? originalPost.authorHandle : post.authorHandle}
                                         </span>
-                                        <span>쨌</span>
+                                        <span>·</span>
                                         <span>{formatTimestamp(new Date(post.timestamp))}</span>
                                     </div>
                                 )}
@@ -1065,13 +1069,13 @@ const postProfile = {
                                             className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition disabled:opacity-50 font-medium rounded p-1"
                                             disabled={isEditing}
                                         >
-                                            ?섏젙
+                                            수정
                                         </button>
                                         <button
                                             onClick={(e) => { e.stopPropagation(); onRequestDelete(post.id); }}
                                             className="text-xs text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition font-medium rounded p-1"
                                         >
-                                            ??젣
+                                            삭제
                                         </button>
                                     </div>
                                 )}
@@ -1090,14 +1094,14 @@ const postProfile = {
                                             onClick={(e) => { e.stopPropagation(); setIsEditing(false); }}
                                             className="px-3 py-1 text-sm text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-100"
                                         >
-                                            痍⑥냼
+                                            취소
                                         </button>
                                         <button
                                             onClick={(e) => { e.stopPropagation(); handleSaveEdit(); }}
                                             className="px-3 py-1 text-sm bg-blue-500 text-white rounded-full hover:bg-blue-600 transition disabled:opacity-50"
                                             disabled={editContent.trim() === post.content.trim() || editContent.trim() === ""}
                                         >
-                                            ???
+                                            저장
                                         </button>
                                     </div>
                                 </div>
@@ -1113,7 +1117,7 @@ const postProfile = {
                                                 <div className={`mt-3 ${isMainFocus ? 'max-h-80' : 'max-h-96'} overflow-hidden rounded-xl`}>
                                                     <img
                                                         src={post.imageUrl}
-                                                        alt="泥⑤? ?대?吏"
+                                                        alt="첨부 이미지"
                                                         className="w-full h-auto object-cover border border-gray-300 dark:border-gray-600"
                                                         onError={(e) => { e.target.style.display = 'none'; }}
                                                     />
@@ -1163,13 +1167,13 @@ const postProfile = {
                                                     onClick={(e) => handleRetweetMenuAction(e, 'RT')}
                                                     className={`w-full text-left px-4 py-2 text-sm transition ${isRetweetedByCurrentUser ? 'text-red-500 hover:bg-red-50 dark:hover:bg-gray-600/50 font-bold' : 'text-green-500 hover:bg-green-50 dark:hover:bg-gray-600/50'}`}
                                                 >
-                                                    {isRetweetedByCurrentUser ? '由ы듃??痍⑥냼' : '由ы듃?쀭븯湲?}
+                                                    {isRetweetedByCurrentUser ? '리트윗 취소' : '리트윗하기'}
                                                 </button>
                                                 <button
                                                     onClick={(e) => handleRetweetMenuAction(e, 'QT')}
                                                     className="w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
                                                 >
-                                                    ?몄슜?섏뿬 ?몄쐵?섍린
+                                                    인용하여 트윗하기
                                                 </button>
                                             </div>
                                         )}
@@ -1181,7 +1185,7 @@ const postProfile = {
                                         disabled={!App.currentUserId}
                                     >
                                         {typeof Heart === 'string'
-                                            ? <span>{isLiked ? '?ㅿ툘' : '?쨳'}</span>
+                                            ? <span>{isLiked ? '❤️' : '🤍'}</span>
                                             : <Heart size={isMainFocus ? 20 : 16} fill={isLiked ? 'currentColor' : 'none'} className={isLiked ? 'text-red-500' : ''} />
                                         }
                                         <span>{sourcePostForReactions.likes?.length > 0 ? sourcePostForReactions.likes.length : ''}</span>
@@ -1193,7 +1197,7 @@ const postProfile = {
                                         disabled={!App.currentUserId}
                                     >
                                         {typeof Bookmark === 'string'
-                                            ? <span>{isBookmarked ? '?? : '??}</span>
+                                            ? <span>{isBookmarked ? '★' : '☆'}</span>
                                             : <Bookmark size={isMainFocus ? 20 : 16} fill={isBookmarked ? 'currentColor' : 'none'} className={isBookmarked ? 'text-blue-500' : ''} />
                                         }
                                     </button>
@@ -1225,9 +1229,9 @@ const postProfile = {
         }, [replyContent]);
         
         const formProfile = currentUserProfile || { 
-            profile: '?뫀', 
+            profile: '👤', 
             color: 'bg-gray-500', 
-            handle: '?ъ슜??,
+            handle: '사용자',
             profileImageUrl: '' 
         };
         
@@ -1235,7 +1239,7 @@ const postProfile = {
     e.preventDefault();
     onReply(replyContent, parentId, null, imageUrl.trim()); 
 
-    // ?뵒 ?뚮━ ?ъ깮
+    // 🔔 소리 재생
 
     const initialContent = !isMainPost && parentAuthorHandle ? `@${parentAuthorHandle} ` : '';
     setReplyContent(isMainPost ? '' : initialContent);
@@ -1260,7 +1264,7 @@ const postProfile = {
     e.target.style.height = e.target.scrollHeight + 'px';
   }}
   style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
-  placeholder={isMainPost ? "吏湲?臾댁뒯 ?쇱씠 ?쇱뼱?섍퀬 ?덈굹??" : "?듦???寃뚯떆?섏꽭??"}
+  placeholder={isMainPost ? "지금 무슨 일이 일어나고 있나요?" : "답글을 게시하세요."}
   className="flex-grow p-2 text-base bg-transparent focus:outline-none dark:text-gray-100 resize-none overflow-hidden mt-2"
   rows="1"
   disabled={!currentUserId}
@@ -1275,14 +1279,14 @@ const postProfile = {
                         className="flex items-center text-blue-500 hover:text-blue-600 transition text-sm font-medium"
                     >
                         {typeof Image === 'string' ? <span className="mr-1">{Image}</span> : <Image size={16} className="mr-1" />}
-                        ?대?吏 二쇱냼 泥⑤?
+                        이미지 주소 첨부
                     </button>
                     <button
                       type="submit"
                       className="ml-2 px-4 py-1.5 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition disabled:opacity-50 font-semibold text-sm"
                       disabled={!currentUserId || (replyContent.trim() === "" && imageUrl.trim() === "")}
                     >
-                      {isMainPost ? '寃뚯떆' : '?듦?'}
+                      {isMainPost ? '게시' : '답글'}
                     </button>
                 </div>
                 
@@ -1292,7 +1296,7 @@ const postProfile = {
                             type="url"
                             value={imageUrl}
                             onChange={(e) => setImageUrl(e.target.value)}
-                            placeholder="?대?吏 二쇱냼(URL)瑜??낅젰?섏꽭??"
+                            placeholder="이미지 주소(URL)를 입력하세요."
                             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                         />
                     </div>
@@ -1301,7 +1305,7 @@ const postProfile = {
                     <div className="mb-2 max-h-40 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 relative">
                         <img 
                             src={imageUrl} 
-                            alt="誘몃━蹂닿린" 
+                            alt="미리보기" 
                             className="w-full object-cover" 
                             onError={(e) => {e.target.style.display='none';}}
                         />
@@ -1331,14 +1335,14 @@ const RecursiveReplies = ({ parentId, allPostProps, posts, postsWithChildren }) 
             {childReplies.map((reply, index) => {
                 const hasChildren = postsWithChildren.has(reply.id);
                 
-                // [2. ?볤? ?ㅻ젅??洹몃９?? - ??볤?????볤?? isThreadView=true濡??꾨떖?섏뿬 border-b瑜??쒓굅?⑸땲??
-                // ExpandableReply ?댁뿉???대? 泥섎━?덇린 ?뚮Ц???ш린?쒕뒗 isThreadView=true瑜?怨좎젙?⑸땲??
+                // [2. 댓글 스레드 그룹화] - 대댓글의 대댓글은 isThreadView=true로 전달하여 border-b를 제거합니다.
+                // ExpandableReply 내에서 이미 처리했기 때문에 여기서는 isThreadView=true를 고정합니다.
                 return (
                     <div key={reply.id}>
                         <PostItem
                             {...allPostProps}
                             post={reply}
-                            isThreadView={true} // ?ㅻ젅?????섏쐞 ?볤?濡?泥섎━
+                            isThreadView={true} // 스레드 내 하위 댓글로 처리
                             drawTopLine={true}
                             drawBottomLine={hasChildren}
                         />
@@ -1371,7 +1375,7 @@ const ExpandableReply = ({ reply, index, replies, allPostProps, posts, postsWith
             <PostItem
                 {...allPostProps}
                 post={reply}
-                isThreadView={true} // ?ㅻ젅????吏곴퀎 ?볤?濡?泥섎━ (PostItem?먯꽌 border 寃곗젙)
+                isThreadView={true} // 스레드 내 직계 댓글로 처리 (PostItem에서 border 결정)
                 drawTopLine={true}
                 drawBottomLine={hasChildren}
             />
@@ -1379,10 +1383,10 @@ const ExpandableReply = ({ reply, index, replies, allPostProps, posts, postsWith
                 <div className="pb-2" onClick={(e) => { e.stopPropagation(); setIsExpanded(true); }}>
                     <div className="relative pt-1 ml-16 cursor-pointer">
                         <div className="absolute left-[-26px] top-[-4px] text-center w-5">
-                            <span className="text-gray-400 dark:text-gray-600 text-lg leading-none"></span> {/* ?먯꽑 ???鍮?怨듦컙 */}
+                            <span className="text-gray-400 dark:text-gray-600 text-lg leading-none"></span> {/* 점선 대신 빈 공간 */}
                         </div>
                         <span className="text-sm font-semibold text-blue-500 hover:text-blue-600">
-                           {`?듦? ${descendantCount}媛?蹂닿린`}
+                           {`답글 ${descendantCount}개 보기`}
                         </span>
                     </div>
                 </div>
@@ -1394,14 +1398,14 @@ const ExpandableReply = ({ reply, index, replies, allPostProps, posts, postsWith
     );
 };
 
-// [1. ?ㅽ겕 紐⑤뱶 異붽?] - ?좉? 踰꾪듉 而댄룷?뚰듃
+// [1. 다크 모드 추가] - 토글 버튼 컴포넌트
 const DarkAndLightModeButton = ({ isDarkMode, onToggle }) => {
     const Icon = isDarkMode ? Sun : Moon;
     return (
         <button
             onClick={onToggle}
             className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-            title={isDarkMode ? "?쇱씠??紐⑤뱶濡??꾪솚" : "?ㅽ겕 紐⑤뱶濡??꾪솚"}
+            title={isDarkMode ? "라이트 모드로 전환" : "다크 모드로 전환"}
         >
             {typeof Icon === 'string' ? <span className="text-xl">{Icon}</span> : <Icon size={20} />}
         </button>
@@ -1425,14 +1429,14 @@ const App = () => {
         const [editingGroupName, setEditingGroupName] = useState(''); 
         
         const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-        const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false); // [2. ?꾨줈??鍮꾨?踰덊샇]
-        const [userToAuthenticate, setUserToAuthenticate] = useState(null); // [2. ?꾨줈??鍮꾨?踰덊샇]
+        const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false); // [2. 프로필 비밀번호]
+        const [userToAuthenticate, setUserToAuthenticate] = useState(null); // [2. 프로필 비밀번호]
         const [isProfileSelectorOpen, setIsProfileSelectorOpen] = useState(true); 
         const [activeView, setActiveView] = useState('timeline'); 
         const [postToRetweet, setPostToRetweet] = useState(null); 
         const [replyToPost, setReplyToPost] = useState(null); 
         const [lastCheckedNotifications, setLastCheckedNotifications] = useState(null);
-        // [1. ?ㅽ겕 紐⑤뱶 異붽?] - ?곹깭 愿由?
+        // [1. 다크 모드 추가] - 상태 관리
         const [isDarkMode, setIsDarkMode] = useState(() => {
             const stored = localStorage.getItem(DARK_MODE_STORAGE_KEY);
             if (stored !== null) return stored === 'true';
@@ -1465,7 +1469,7 @@ const App = () => {
                 name: custom.name || mockUserProfile.name,
                 handle: custom.handle || mockUserProfile.handle,
                 profileImageUrl: profileImageUrl, 
-                passwordHash: custom.passwordHash || null, // [2. ?꾨줈??鍮꾨?踰덊샇]
+                passwordHash: custom.passwordHash || null, // [2. 프로필 비밀번호]
             };
         }, [currentUserId, mockUserProfile, currentCustomProfile]); 
 
@@ -1483,7 +1487,7 @@ const App = () => {
             }
         };
         
-        // [2. ?꾨줈??鍮꾨?踰덊샇] - ?꾨줈???????鍮꾨?踰덊샇 ?댁떆 ???濡쒖쭅 異붽?
+        // [2. 프로필 비밀번호] - 프로필 저장 시 비밀번호 해시 저장 로직 추가
         const handleProfileSave = useCallback(async ({ name, handle, profileImageUrl, passwordHash }) => {
             if (!db || !currentUserId) return;
             try {
@@ -1492,11 +1496,11 @@ const App = () => {
                     name, 
                     handle, 
                     profileImageUrl: profileImageUrl.trim(),
-                    passwordHash: passwordHash // ?댁떆??鍮꾨?踰덊샇 ???
+                    passwordHash: passwordHash // 해시된 비밀번호 저장
                 }, { merge: true });
             } catch (error) {
                 console.error("Error saving profile to Firestore:", error);
-                alert("?꾨줈????μ뿉 ?ㅽ뙣?덉뒿?덈떎. 肄섏넄???뺤씤??二쇱꽭??");
+                alert("프로필 저장에 실패했습니다. 콘솔을 확인해 주세요.");
             }
             setIsProfileModalOpen(false);
         }, [db, currentUserId]);
@@ -1519,7 +1523,7 @@ const App = () => {
                 return handleLogout(); 
             }
 
-            // [2. ?꾨줈??鍮꾨?踰덊샇] - 鍮꾨?踰덊샇 ?ㅼ젙 ?뺤씤 諛?紐⑤떖 ?닿린
+            // [2. 프로필 비밀번호] - 비밀번호 설정 확인 및 모달 열기
             if (fullProfile.passwordHash) {
                 setUserToAuthenticate(fullProfile);
                 setIsPasswordModalOpen(true);
@@ -1528,7 +1532,7 @@ const App = () => {
             }
         };
         
-        // [2. ?꾨줈??鍮꾨?踰덊샇] - ?ㅼ젣 濡쒓렇???섑뻾 濡쒖쭅
+        // [2. 프로필 비밀번호] - 실제 로그인 수행 로직
         const performLogin = useCallback((user) => {
             setCurrentUserId(user.uid);
             localStorage.setItem(ACTIVE_USER_STORAGE_KEY, user.uid);
@@ -1549,7 +1553,7 @@ const App = () => {
                 setEditingGroupName('');
             } catch (error) {
                 console.error("Error saving group name to Firestore:", error);
-                alert("? ?대쫫 ??μ뿉 ?ㅽ뙣?덉뒿?덈떎.");
+                alert("팀 이름 저장에 실패했습니다.");
             }
         }, [db, editingGroupName]);
 
@@ -1593,23 +1597,23 @@ const App = () => {
                                 await signInAnonymously(firebaseAuth);
                             }
                         } catch (e) {
-                            console.error("?몄쬆 ?쒕룄 ?ㅽ뙣:", e.code, e.message);
+                            console.error("인증 시도 실패:", e.code, e.message);
                         }
                     }
                     setIsLoading(false); 
                 }, (error) => {
-                    console.error("onAuthStateChanged ?ㅻ쪟:", error);
+                    console.error("onAuthStateChanged 오류:", error);
                     setIsLoading(false);
                 });
 
                 return () => unsubscribe();
             } catch (e) {
-                console.error("Firebase 珥덇린???먮뒗 ?몄쬆 ?ㅻ쪟:", e.name, e.message);
+                console.error("Firebase 초기화 또는 인증 오류:", e.name, e.message);
                 setIsLoading(false);
             }
         }, []);
         
-        // [1. ?ㅽ겕 紐⑤뱶 異붽?] - Dark Mode ?곹깭瑜?body ?대옒?ㅼ뿉 諛섏쁺 諛?濡쒖뺄 ?ㅽ넗由ъ??????
+        // [1. 다크 모드 추가] - Dark Mode 상태를 body 클래스에 반영 및 로컬 스토리지에 저장
         useEffect(() => {
             if (isDarkMode) {
                 document.body.classList.add('dark');
@@ -1620,7 +1624,7 @@ const App = () => {
             }
         }, [isDarkMode]);
 
-        // [1. ?ㅽ겕 紐⑤뱶 異붽?] - ?좉? ?몃뱾??
+        // [1. 다크 모드 추가] - 토글 핸들러
         const toggleDarkMode = useCallback(() => {
             setIsDarkMode(prev => !prev);
         }, []);
@@ -1639,7 +1643,7 @@ const App = () => {
                     setCurrentCustomProfile({}); 
                 }
             }, (error) => {
-                console.error("Firestore Profile 遺덈윭?ㅺ린 ?ㅻ쪟:", error);
+                console.error("Firestore Profile 불러오기 오류:", error);
                 setCurrentCustomProfile({});
             });
             return () => unsubscribe();
@@ -1655,7 +1659,7 @@ const App = () => {
                 });
                 setAllCustomProfiles(fetchedProfiles);
             }, (error) => {
-                console.error("Firestore All Profiles 遺덈윭?ㅺ린 ?ㅻ쪟:", error);
+                console.error("Firestore All Profiles 불러오기 오류:", error);
             });
             return () => unsubscribe();
         }, [db, isLoading]);
@@ -1670,7 +1674,7 @@ const App = () => {
                 });
                 setCustomGroups(fetchedGroups);
             }, (error) => {
-                console.error("Firestore Custom Groups 遺덈윭?ㅺ린 ?ㅻ쪟:", error);
+                console.error("Firestore Custom Groups 불러오기 오류:", error);
             });
             return () => unsubscribe();
         }, [db, isLoading]);
@@ -1682,7 +1686,7 @@ const App = () => {
             }
         }, [currentUserId]);
 
-// ?뵒 理쒖큹 ?ㅻ깄??臾댁쓬 ?뚮옒洹?
+// 🔔 최초 스냅샷 무음 플래그
 const initialPostsLoadedRef = React.useRef(false);
 
 useEffect(() => {
@@ -1711,7 +1715,7 @@ useEffect(() => {
       );
       setPosts(sortedPosts);
 
-      // added 留? 洹몃━怨??묒꽦?먭? ?섍? ?꾨땺 ?뚮쭔
+      // added 만, 그리고 작성자가 나가 아닐 때만
 const changes = snapshot.docChanges();
 if (initialPostsLoadedRef.current) {
   for (const change of changes) {
@@ -1723,11 +1727,11 @@ if (initialPostsLoadedRef.current) {
     }
   }
 } else {
-  initialPostsLoadedRef.current = true; // 珥덇린 濡쒕뱶 臾댁쓬
+  initialPostsLoadedRef.current = true; // 초기 로드 무음
 }
     },
     (error) => {
-      console.error("Firestore ?곗씠??遺덈윭?ㅺ린 ?ㅻ쪟:", error);
+      console.error("Firestore 데이터 불러오기 오류:", error);
     }
   );
 
@@ -1749,7 +1753,7 @@ if (initialPostsLoadedRef.current) {
             if (content.trim() === "" && !retweetedPostId && !imageUrl) return;
 
             const postingProfile = currentUserProfile || { 
-                uid: currentUserId, name: "Anonymous User", handle: "anonymous", color: "bg-gray-500", profile: "?뫀", profileImageUrl: '' 
+                uid: currentUserId, name: "Anonymous User", handle: "anonymous", color: "bg-gray-500", profile: "👤", profileImageUrl: '' 
             };
             
             const mentionRegex = /@([a-zA-Z0-9_]+)/g;
@@ -1762,8 +1766,8 @@ if (initialPostsLoadedRef.current) {
                 }
             }
             
-            // ?듦??????? ?먮낯 寃뚯떆臾?rootPost)??threadUpdatedTimestamp瑜??낅뜲?댄듃?섎뒗 濡쒖쭅? ??젣?⑸땲??
-            // ?댁젣 媛쒕퀎 '媛吏'媛 ??꾨씪???쒖꽌瑜?寃곗젙?섎?濡? 猷⑦듃 寃뚯떆臾쇱쓽 ?쒓컙??諛붽? ?꾩슂媛 ?놁뒿?덈떎.
+            // 답글을 달 때, 원본 게시물(rootPost)의 threadUpdatedTimestamp를 업데이트하는 로직은 삭제합니다.
+            // 이제 개별 '가지'가 타임라인 순서를 결정하므로, 루트 게시물의 시간을 바꿀 필요가 없습니다.
 
             try {
                 const postsColRef = collection(db, `/artifacts/${canvasAppId}/public/data/posts`);
@@ -1786,7 +1790,7 @@ if (initialPostsLoadedRef.current) {
 
                 setNewPostId(newDocRef.id); 
             } catch (e) {
-                console.error("寃뚯떆 ?ㅽ뙣:", e);
+                console.error("게시 실패:", e);
             }
         }, [db, currentUserId, currentUserProfile, getDoc, handleToUidMap]);
         
@@ -1801,12 +1805,12 @@ if (initialPostsLoadedRef.current) {
                         await deleteDoc(doc(db, `/artifacts/${canvasAppId}/public/data/posts`, targetPost.id));
                     } catch(e) { /* silent fail */ }
                  }
-                 return console.error("?≪뀡 ????먮낯 寃뚯떆臾쇱쓣 李얠쓣 ???놁뒿?덈떎.");
+                 return console.error("액션 대상 원본 게시물을 찾을 수 없습니다.");
             }
             const postToQuote = posts.find(p => p.id === targetOriginalId);
 
             if (actionType === 'QT') {
-                if (!postToQuote) return console.error("?몄슜???먮낯 寃뚯떆臾쇱쓣 李얠쓣 ???놁뒿?덈떎.");
+                if (!postToQuote) return console.error("인용할 원본 게시물을 찾을 수 없습니다.");
                 setPostToRetweet({ post: postToQuote, action: 'QT' });
             } else if (actionType === 'RT') {
                 const existingSimpleRT = posts.find(p => 
@@ -1821,10 +1825,10 @@ if (initialPostsLoadedRef.current) {
                         const docRef = doc(db, `/artifacts/${canvasAppId}/public/data/posts`, existingSimpleRT.id);
                         await deleteDoc(docRef);
                     } catch (e) {
-                        console.error("?몃━?몄쐵 ?ㅽ뙣:", e);
+                        console.error("언리트윗 실패:", e);
                     }
                 } else {
-                    if (!postToQuote) return console.error("由ы듃?쀭븷 ?먮낯 寃뚯떆臾쇱쓣 李얠쓣 ???놁뒿?덈떎.");
+                    if (!postToQuote) return console.error("리트윗할 원본 게시물을 찾을 수 없습니다.");
                     await handlePost("", null, targetOriginalId, null);
                 }
             }
@@ -1853,7 +1857,7 @@ if (initialPostsLoadedRef.current) {
                     await updateDoc(docRef, { [fieldName]: newUsers });
                 }
             } catch (e) {
-                console.error(`${fieldName} ?좉? ?ㅽ뙣:`, e);
+                console.error(`${fieldName} 토글 실패:`, e);
             }
         }, [db, currentUserId, getDoc]);
 
@@ -1881,7 +1885,7 @@ if (initialPostsLoadedRef.current) {
                     setSelectedPostIdForThread(null);
                 }
             } catch (e) {
-                console.error("寃뚯떆臾???젣 ?ㅽ뙣:", e);
+                console.error("게시물 삭제 실패:", e);
             } finally {
                 setPostToDelete(null); 
             }
@@ -1905,7 +1909,7 @@ if (initialPostsLoadedRef.current) {
                 });
                 return true;
             } catch (e) {
-                console.error("寃뚯떆臾??섏젙 ?ㅽ뙣:", e);
+                console.error("게시물 수정 실패:", e);
                 return false;
             }
         }, [db, currentUserId]);
@@ -1923,7 +1927,7 @@ if (initialPostsLoadedRef.current) {
         }, [mentionPosts, lastCheckedNotifications]);
 
 
-        // [!!!] ?ш린媛 '?섎춪媛吏' 濡쒖쭅???듭떖?낅땲?? (?섏젙??
+        // [!!!] 여기가 '나뭇가지' 로직의 핵심입니다. (수정됨)
         const displayItems = useMemo(() => {
             if (selectedPostIdForThread) return [];
 
@@ -1942,22 +1946,22 @@ if (initialPostsLoadedRef.current) {
             if (activeView === 'timeline') {
                 const postsById = new Map(posts.map(p => [p.id, p]));
                 const timelineActivities = [];
-                const processedBranches = new Set(); // 泥섎━??'媛吏'瑜?異붿쟻?⑸땲?? (泥?踰덉㎏ ?볤? ID 湲곗?)
+                const processedBranches = new Set(); // 처리된 '가지'를 추적합니다. (첫 번째 댓글 ID 기준)
 
-                // 紐⑤뱺 寃뚯떆臾쇱쓣 理쒖떊?쒖쑝濡??쒗쉶?⑸땲??
+                // 모든 게시물을 최신순으로 순회합니다.
                 for (const latestPostInActivity of posts) {
                     
-                    // ?⑥닚 由ы듃?쀬쓣 癒쇱? 泥섎━?⑸땲??
-                    // ?⑥닚 由ы듃?쀬쓣 癒쇱? 泥섎━?⑸땲??
+                    // 단순 리트윗을 먼저 처리합니다.
+                    // 단순 리트윗을 먼저 처리합니다.
                     if (latestPostInActivity.retweetedPostId && !latestPostInActivity.content && !latestPostInActivity.replyToId) {
-                        if (!processedBranches.has(latestPostInActivity.id)) { // 以묐났 諛⑹?瑜??꾪빐 ?먯떊??ID瑜??ъ슜
+                        if (!processedBranches.has(latestPostInActivity.id)) { // 중복 방지를 위해 자신의 ID를 사용
                             timelineActivities.push({ type: 'retweet', activity: latestPostInActivity, id: latestPostInActivity.id });
                             processedBranches.add(latestPostInActivity.id);
                         }
                         continue;
                     }
                     
-                    // 理쒖떊 寃뚯떆臾쇰???猷⑦듃源뚯??????寃쎈줈瑜?異붿쟻?⑸땲??
+                    // 최신 게시물부터 루트까지의 대화 경로를 추적합니다.
                     const path = [];
                     let current = latestPostInActivity;
                     while (current) {
@@ -1968,40 +1972,40 @@ if (initialPostsLoadedRef.current) {
                     const rootPost = path[0];
                     if (!rootPost) continue;
 
-                    // '媛吏'??猷⑦듃 寃뚯떆臾쇱뿉 ?щ┛ 泥?踰덉㎏ ?볤?濡??앸퀎?⑸땲??
-                    // 寃쎈줈??猷⑦듃留??덈떎硫? 媛吏 ID??猷⑦듃??ID媛 ?⑸땲??
+                    // '가지'는 루트 게시물에 달린 첫 번째 댓글로 식별합니다.
+                    // 경로에 루트만 있다면, 가지 ID는 루트의 ID가 됩니다.
                     const branchIdentifier = path.length > 1 ? path[1].id : rootPost.id;
 
-                    // ??媛吏?먯꽌 ??理쒖떊 ?쒕룞???대? 泥섎━?덈떎硫?嫄대꼫?듬땲??
+                    // 이 가지에서 더 최신 활동을 이미 처리했다면 건너킵니다.
                     if (processedBranches.has(branchIdentifier)) {
                         continue;
                     }
 
-                    // 寃쎈줈 援ъ“???곕씪 ??꾨씪???꾩씠?쒖쓣 援ъ꽦?⑸땲??
-                    if (path.length === 1) { // 耳?댁뒪 1: ?볤????녿뒗 ?먮낯 寃뚯떆臾?
+                    // 경로 구조에 따라 타임라인 아이템을 구성합니다.
+                    if (path.length === 1) { // 케이스 1: 댓글이 없는 원본 게시물
                         timelineActivities.push({
                             type: 'root_only',
                             rootPost: rootPost,
                             id: rootPost.id
                         });
-                    } else if (path.length === 2) { // 耳?댁뒪 2: ?먮낯 寃뚯떆臾쇱뿉 ?щ┛ ?⑥씪 ?볤?
+                    } else if (path.length === 2) { // 케이스 2: 원본 게시물에 달린 단일 댓글
                         timelineActivities.push({
                             type: 'single_reply',
                             rootPost: rootPost,
-                            reply: path[1], // ?좎씪???볤?
+                            reply: path[1], // 유일한 댓글
                             id: branchIdentifier
                         });
-                    } else { // 耳?댁뒪 3: 以묒꺽?????(3??援ъ“濡??쒖떆)
+                    } else { // 케이스 3: 중첩된 대화 (3단 구조로 표시)
                         timelineActivities.push({
                             type: 'branch',
                             rootPost: rootPost,
-                            parentReply: path[path.length - 2], // 理쒖떊 ?볤???諛붾줈 ??遺紐?
+                            parentReply: path[path.length - 2], // 최신 댓글의 바로 위 부모
                             latestReply: latestPostInActivity,
                             id: branchIdentifier
                         });
                     }
                     
-                    // ??媛吏??泥섎━?섏뿀?뚯쓣 ?쒖떆?섏뿬 以묐났?쇰줈 ??꾨씪?몄뿉 ?섑??섏? ?딅룄濡??⑸땲??
+                    // 이 가지는 처리되었음을 표시하여 중복으로 타임라인에 나타나지 않도록 합니다.
                     processedBranches.add(branchIdentifier);
                 }
                 
@@ -2045,7 +2049,7 @@ if (initialPostsLoadedRef.current) {
             return (
                 <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
                     {typeof LoaderIcon === 'string' ? <span className="animate-spin mr-2 text-2xl">{LoaderIcon}</span> : <LoaderIcon className="animate-spin mr-2" size={24} />}
-                    ?곗씠??濡쒕뵫 以?..
+                    데이터 로딩 중...
                 </div>
             );
         }
@@ -2054,7 +2058,7 @@ if (initialPostsLoadedRef.current) {
             setSelectedPostIdForThread(null);
         };
         
-        const currentProfileDisplay = currentUserProfile || { name: '濡쒓렇?꾩썐??, handle: 'guest', profile: '?', color: 'bg-gray-500', profileImageUrl: '' };
+        const currentProfileDisplay = currentUserProfile || { name: '로그아웃됨', handle: 'guest', profile: '?', color: 'bg-gray-500', profileImageUrl: '' };
         
         const allPostProps = {
             onThreadSelect: handleThreadSelect, 
@@ -2097,7 +2101,7 @@ if (initialPostsLoadedRef.current) {
                         </button>
 
                         <div className="space-x-2 flex items-center">
-                            {/* [1. ?ㅽ겕 紐⑤뱶 異붽?] - ?좉? 踰꾪듉 ?꾩튂 */}
+                            {/* [1. 다크 모드 추가] - 토글 버튼 위치 */}
                             <DarkAndLightModeButton 
                                 isDarkMode={isDarkMode} 
                                 onToggle={toggleDarkMode}
@@ -2108,7 +2112,7 @@ if (initialPostsLoadedRef.current) {
                                     onClick={() => setIsProfileModalOpen(true)}
                                     className="px-3 py-1 bg-white text-blue-600 border border-blue-600 rounded-full font-medium shadow-sm hover:bg-blue-50 transition duration-150 text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-blue-400 dark:border-blue-400"
                                 >
-                                    ?섏젙
+                                    수정
                                 </button>
                             )}
                             
@@ -2116,7 +2120,7 @@ if (initialPostsLoadedRef.current) {
                                 onClick={handleLogout}
                                 className="px-3 py-1 bg-white text-red-600 border border-red-600 rounded-full font-medium shadow-sm hover:bg-red-50 transition duration-150 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-red-400 dark:border-red-400"
                             >
-                                濡쒓렇?꾩썐
+                                로그아웃
                             </button>
                         </div>
                     </div>
@@ -2153,13 +2157,13 @@ if (initialPostsLoadedRef.current) {
                                                     disabled={editingGroupName.trim() === '' || editingGroupName.trim() === displayName}
                                                     className="text-xs px-1 py-0.5 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 transition"
                                                 >
-                                                    ???
+                                                    저장
                                                 </button>
                                                 <button
                                                     onClick={handleCancelEditGroup}
                                                     className="text-xs px-1 py-0.5 bg-gray-400 text-white rounded-md hover:bg-gray-500 transition"
                                                 >
-                                                    痍⑥냼
+                                                    취소
                                                 </button>
                                             </div>
                                         </div>
@@ -2193,9 +2197,9 @@ if (initialPostsLoadedRef.current) {
 
                         <div className="p-2 bg-gray-50 dark:bg-gray-900 rounded-lg max-h-60 overflow-y-auto">
                             <span className="font-semibold text-gray-500 dark:text-gray-400 self-center mb-2 block border-b pb-1 dark:border-gray-700">
-                                {customGroups[activeGroup] || MOCK_GROUPS.find(g => g.id === activeGroup)?.name} ?꾨줈???좏깮:
+                                {customGroups[activeGroup] || MOCK_GROUPS.find(g => g.id === activeGroup)?.name} 프로필 선택:
                             </span>
-                           <div className="grid grid-cols-2 gap-6 px-4 place-items-center">
+                            <div className="grid grid-cols-2 gap-6 px-4 place-items-center">
                                 {filteredUsers.map(user => {
                                     const custom = allCustomProfiles[user.uid] || {};
                                     const displayProfile = {
@@ -2203,7 +2207,7 @@ if (initialPostsLoadedRef.current) {
                                         name: custom.name || user.name,
                                         handle: custom.handle || user.handle,
                                         profileImageUrl: custom.profileImageUrl || '',
-                                        passwordHash: custom.passwordHash || null, // [2. ?꾨줈??鍮꾨?踰덊샇]
+                                        passwordHash: custom.passwordHash || null, // [2. 프로필 비밀번호]
                                     };
 
                                     return (
@@ -2229,7 +2233,7 @@ if (initialPostsLoadedRef.current) {
                                                 <p className="text-xs truncate">@{displayProfile.handle}</p>
                                             </div>
                                             {displayProfile.passwordHash && (
-                                                <span className="text-xs ml-1">?뵏</span> // 鍮꾨?踰덊샇 ?좉툑 ?꾩씠肄?
+                                                <span className="text-xs ml-1">🔒</span> // 비밀번호 잠금 아이콘
                                             )}
                                         </button>
                                     );
@@ -2298,7 +2302,7 @@ if (initialPostsLoadedRef.current) {
                                     >
                                         {typeof ArrowLeft === 'string' ? <span className="text-xl">{ArrowLeft}</span> : <ArrowLeft size={20} />}
                                     </button>
-                                    <h2 className="text-lg font-bold">?ㅻ젅??/h2>
+                                    <h2 className="text-lg font-bold">스레드</h2>
                                 </div>
                                 {threadData ? (
                                     <div>
@@ -2347,14 +2351,14 @@ if (initialPostsLoadedRef.current) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="text-center text-gray-500 p-8">寃뚯떆臾쇱쓣 李얠쓣 ???놁뒿?덈떎.</div>
+                                    <div className="text-center text-gray-500 p-8">게시물을 찾을 수 없습니다.</div>
                                 )}
                             </div>
                         ) : displayItems.length === 0 ? (
                             <div className="p-10 text-center text-gray-500 dark:text-gray-400">
                                 {currentViewData.emptyMessage}
                             </div>
-                        // [!!!] ?ш린媛 '?섎춪媛吏' 酉곕? ?뚮뜑留곹븯???듭떖 遺遺꾩엯?덈떎. (?섏젙??
+                        // [!!!] 여기가 '나뭇가지' 뷰를 렌더링하는 핵심 부분입니다. (수정됨)
                         ) : activeView === 'timeline' ? (
                                 displayItems.map(item => {
                                     if (item.type === 'root_only') {
@@ -2365,7 +2369,7 @@ if (initialPostsLoadedRef.current) {
                                         return <PostItem key={item.id} {...allPostProps} post={item.activity} />;
                                     }
 
-                                    // [?먮낯 湲] ??[?볤?] 援ъ“濡??뚮뜑留?
+                                    // [원본 글] → [댓글] 구조로 렌더링
                                     if (item.type === 'single_reply') {
                                         return (
                                             <div 
@@ -2391,7 +2395,7 @@ if (initialPostsLoadedRef.current) {
                                         );
                                     }
 
-                                    // [?먮낯 湲] ??[遺紐??볤?] ??[理쒖떊 ??볤?] 援ъ“濡??뚮뜑留?
+                                    // [원본 글] → [부모 댓글] → [최신 대댓글] 구조로 렌더링
                                     if (item.type === 'branch') {
                                         return (
                                             <div 
@@ -2449,7 +2453,7 @@ if (initialPostsLoadedRef.current) {
                     <ProfileEditorModal
                         profile={currentUserProfile}
                         onSave={handleProfileSave}
-                        currentPasswordHash={currentUserProfile.passwordHash} // [2. ?꾨줈??鍮꾨?踰덊샇]
+                        currentPasswordHash={currentUserProfile.passwordHash} // [2. 프로필 비밀번호]
                         onCancel={() => setIsProfileModalOpen(false)}
                     />
                 )}
@@ -2474,7 +2478,7 @@ if (initialPostsLoadedRef.current) {
                     />
                 )}
                 
-                {/* [2. ?꾨줈??鍮꾨?踰덊샇] - 鍮꾨?踰덊샇 ?몄쬆 紐⑤떖 ?쒖떆 */}
+                {/* [2. 프로필 비밀번호] - 비밀번호 인증 모달 표시 */}
                 {isPasswordModalOpen && userToAuthenticate && (
                     <PasswordModal
                         user={userToAuthenticate}
@@ -2494,11 +2498,6 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
-
-
-
-
-
 
 
 
