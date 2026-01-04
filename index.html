@@ -205,7 +205,8 @@ const MOCK_USERS = [
     };
 
     const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
-        const hasImage = profile.profileImageUrl && profile.profileImageUrl.startsWith('http');
+    const imageUrl = profile.profileImageUrl || '';
+    const hasImage = imageUrl.startsWith('http');
         
         const handleImageError = (e, profile) => {
             e.target.style.display = 'none'; 
@@ -237,12 +238,12 @@ const MOCK_USERS = [
             <div 
                 className={`rounded-full flex items-center justify-center flex-shrink-0 ${sizeClass} ${hasImage ? 'overflow-hidden bg-transparent' : defaultStyleClass}`}
             >
-                {hasImage ? (
-                    <img 
-                        src={profile.profileImageUrl} 
-                        alt={`${profile.name} profile`} 
-                        className="w-full h-full object-cover"
-                        onError={(e) => handleImageError(e, profile)}
+{hasImage ? (
+    <img 
+        src={imageUrl}
+        alt={`${profile.name} profile`} 
+        className="w-full h-full object-cover"
+        onError={(e) => handleImageError(e, profile)}
                     />
                 ) : (
                     <span className={`${textSizeClass} ${isSmall ? 'text-white' : ''}`}>{profile.profile}</span>
@@ -2474,5 +2475,6 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
 
 
