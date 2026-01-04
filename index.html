@@ -205,13 +205,7 @@ const MOCK_USERS = [
     };
 
     const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
-        // 🔹 항상 "현재 캐릭터 프로필"을 기준으로 이미지 결정
-  const currentProfile = profiles.find(
-    (p) => p.uid === profile.uid
-  );
-
-  const imageUrl = currentProfile?.profileImageUrl || '';
-  const hasImage = imageUrl.startsWith('http');
+        const hasImage = profile.profileImageUrl && profile.profileImageUrl.startsWith('http');
         
         const handleImageError = (e, profile) => {
             e.target.style.display = 'none'; 
@@ -2474,6 +2468,3 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
-
-
-
