@@ -2471,7 +2471,7 @@ if (initialPostsLoadedRef.current) {
                     />
                 )}
 
-                {replyToPost && App.currentUserId && (
+                {replyToPost && currentUserId && (
                     <ReplyModal
                         post={replyToPost}
                         onReply={handlePost}
