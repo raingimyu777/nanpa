@@ -1477,8 +1477,8 @@ const App = () => {
             };
         }, [currentUserId, mockUserProfile, currentCustomProfile]); 
 
-        App.currentUserProfile = currentUserProfile; 
-        setCurrentUserId(user.uid);
+        App.currentUserProfile = currentUserProfile;
+    App.currentUserId = currentUserId;
         
         const filteredUsers = useMemo(() => 
             MOCK_USERS.filter(user => user.group === activeGroup),
