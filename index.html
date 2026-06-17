@@ -57,7 +57,7 @@
 
 <div id="root"></div>
     
-
+/** @jsx React.createElement */
 <script type="text/babel" data-type="module">
     const { useState, useEffect, useCallback, useMemo, useRef } = React;
 // 🔔 안전한 "띵" 소리 (전역 유틸: 어디서든 호출 가능)
@@ -1478,7 +1478,7 @@ const App = () => {
         }, [currentUserId, mockUserProfile, currentCustomProfile]); 
 
         App.currentUserProfile = currentUserProfile; 
-        currentUserId = currentUserId; 
+        setCurrentUserId(user.uid);
         
         const filteredUsers = useMemo(() => 
             MOCK_USERS.filter(user => user.group === activeGroup),
@@ -1523,7 +1523,7 @@ const App = () => {
         const handleProfileSwitch = (user) => {
             const fullProfile = allCustomProfiles[user.uid] ? { ...user, ...allCustomProfiles[user.uid] } : user;
             
-            if (currentUserId === user.uid) {
+            if (setCurrentUserId(user.uid);) {
                 return handleLogout(); 
             }
 
@@ -2220,7 +2220,7 @@ if (initialPostsLoadedRef.current) {
                                             onClick={() => handleProfileSwitch(user)}
                                             className={`flex items-center p-3 rounded-xl text-white transition w-full max-w-[48%] sm:max-w-[30%]
                                             ${user.color} 
-                                            ${currentUserId === user.uid ? 'ring-4 ring-offset-2 ring-red-400 scale-[1.01] opacity-100 shadow-lg' : 'opacity-80 hover:opacity-100'}
+                                            ${setCurrentUserId(user.uid); ? 'ring-4 ring-offset-2 ring-red-400 scale-[1.01] opacity-100 shadow-lg' : 'opacity-80 hover:opacity-100'}
                                             `}
                                         >
                                             <div className="mr-2">
