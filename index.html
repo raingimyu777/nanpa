@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nanparu Twitter</title>
+    <title>Nanpa Twitter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.min.js"></script> 
     
@@ -56,9 +56,8 @@
 <body class="bg-gray-100 dark:bg-gray-900 font-sans">
 
 <div id="root"></div>
-    
-/** @jsx React.createElement */
-<script type="text/babel" data-type="module">
+
+<script type="text/babel">
     const { useState, useEffect, useCallback, useMemo, useRef } = React;
 // 🔔 안전한 "띵" 소리 (전역 유틸: 어디서든 호출 가능)
 function getAudioCtx() {
@@ -170,23 +169,16 @@ const hardcodedFirebaseConfig = {
 const MOCK_GROUPS = [
     { id: 'group1', name: '난파', icon: '🤎💜' },
     { id: 'group2', name: '블루토', icon: '🖤💙' },
-    { id: 'group3', name: '마르솔', icon: '🤍🖤' },
+    { id: 'group3', name: '기타', icon: '💌' },
 ];
 
 const MOCK_USERS = [
-    { uid: 'user-007', name: '이 난', handle: 'user7', color: 'bg-gray-500', profile: '2', group: 'group1'  },
-    { uid: 'user-008', name: '파이톤', handle: 'user8', color: 'bg-gray-500', profile: '2', group: 'group1' },
-   // 윗 이난 파이톤 : 오리진
-     { uid: 'user-001', name: '이 난', handle: 'user1', color: 'bg-gray-500', profile: '2', group: 'group1' },
+    { uid: 'user-001', name: '이 난', handle: 'user1', color: 'bg-gray-500', profile: '2', group: 'group1' },
     { uid: 'user-002', name: '파이톤', handle: 'user2', color: 'bg-gray-500', profile: '2', group: 'group1' },
-   // 윗 이난 파이톤 : 청춘AU
-    { uid: 'user-005', name: '플루토', handle: 'user5', color: 'bg-gray-500', profile: '5', group: 'group2', profileImageUrl: 'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FlWjZ6%2FdJMcadgb6QS%2FAAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1772290799%26allow_ip%3D%26allow_referer%3D%26signature%3DC0feEQzdFx9yiHs8GoC2Np%252BxNHk%253D'},
+    { uid: 'user-005', name: '플루토', handle: 'user5', color: 'bg-gray-500', profile: '5', group: 'group2' },
     { uid: 'user-006', name: '블루 민', handle: 'user6', color: 'bg-gray-500', profile: '6', group: 'group2' },
-  { uid: 'user-009', name: '솔 브라이튼', handle: 'user9', color: 'bg-gray-500', profile: '9', group: 'group3' , profileImageUrl: 'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FbfHedd%2FdJMcafFpQxB%2FAAAAAAAAAAAAAAAAAAAAACqVWirYcbXyB-x45Fbe0GpUNqLe_ZUkVCpS3vbgOCNJ%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1772290799%26allow_ip%3D%26allow_referer%3D%26signature%3D7IF5t1PgAGxPehKjLIGBySnr%252FO4%253D'},
-    { uid: 'user-0010', name: '마르코 베스페르', handle: 'use10', color: 'bg-gray-500', profile: '10', group: 'group3', profileImageUrl: 'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2Fb6onzl%2FdJMcagElL1h%2FAAAAAAAAAAAAAAAAAAAAAGw1Loxs4DJMssCfQKQClmGR07zeb9dqK4R0y5MveSQK%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1772290799%26allow_ip%3D%26allow_referer%3D%26signature%3D%252B%252Bdz73PBLhWF2zNvQhXZ6LdIjY4%253D' },
     { uid: 'user-003', name: 'Story', handle: 'user3', color: 'bg-gray-500', profile: '3', group: 'group3' },
     { uid: 'user-004', name: 'NPC', handle: 'user4', color: 'bg-gray-500', profile: '4', group: 'group3' },
-
 
 ];
     
@@ -212,27 +204,10 @@ const MOCK_USERS = [
         });
     };
 
-  const ProfilePictureDisplay = ({
-  profile,
-  sizeClass = 'w-10 h-10',
-  textSizeClass = 'text-lg',
-  isSmall = false
-}) => {
-
-  const currentUser = MOCK_USERS.find(u =>
-    (profile.uid && u.uid === profile.uid) ||
-    (profile.handle && u.handle === profile.handle) ||
-    (profile.name && u.name === profile.name)
-  );
-
-  const imageUrl =
-    currentUser?.profileImageUrl ||
-    profile.profileImageUrl ||
-    '';
-
-  const hasImage = imageUrl.startsWith('http');
-
-  const handleImageError = (e, profile) => {
+    const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
+        const hasImage = profile.profileImageUrl && profile.profileImageUrl.startsWith('http');
+        
+        const handleImageError = (e, profile) => {
             e.target.style.display = 'none'; 
             const parentDiv = e.target.parentElement;
             const colorClass = profile.color.split('-').slice(1, 3).join('-');
@@ -262,12 +237,12 @@ const MOCK_USERS = [
             <div 
                 className={`rounded-full flex items-center justify-center flex-shrink-0 ${sizeClass} ${hasImage ? 'overflow-hidden bg-transparent' : defaultStyleClass}`}
             >
-{hasImage ? (
-    <img 
-        src={imageUrl}
-        alt={`${profile.name} profile`} 
-        className="w-full h-full object-cover"
-        onError={(e) => handleImageError(e, profile)}
+                {hasImage ? (
+                    <img 
+                        src={profile.profileImageUrl} 
+                        alt={`${profile.name} profile`} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => handleImageError(e, profile)}
                     />
                 ) : (
                     <span className={`${textSizeClass} ${isSmall ? 'text-white' : ''}`}>{profile.profile}</span>
@@ -482,22 +457,14 @@ const MOCK_USERS = [
             handle: '사용자',
             profileImageUrl: '' 
         };
-
-const currentUser = MOCK_USERS.find(u =>
-  (post.authorUid && u.uid === post.authorUid) ||
-  (post.authorHandle && u.handle === post.authorHandle) ||
-  (post.authorName && u.name === post.authorName)
-);
-
-const postProfile = {
-  name: post.authorName,
-  handle: post.authorHandle,
-  profile: post.authorProfile,
-  profileImageUrl:
-    currentUser?.profileImageUrl || post.authorImageUrl || '',
-  color: post.authorColor,
-};
-
+        
+        const postProfile = {
+            name: post.authorName,
+            handle: post.authorHandle,
+            profile: post.authorProfile,
+            profileImageUrl: post.authorImageUrl,
+            color: post.authorColor,
+        };
         
       const handleReplySubmit = (e) => {
     e.preventDefault();
@@ -860,14 +827,11 @@ const postProfile = {
     const QuotedPost = ({ originalPost, onThreadSelect }) => {
         if (!originalPost) return null;
 
-        const currentUser = MOCK_USERS.find(
-    u => u.handle === originalPost.authorHandle
-);
         const postProfile = {
             name: originalPost.authorName,
             handle: originalPost.authorHandle,
             profile: originalPost.authorProfile,
-            profileImageUrl: currentUser?.profileImageUrl || originalPost.authorImageUrl || '',
+            profileImageUrl: originalPost.authorImageUrl,
             color: originalPost.authorColor,
         };
         
@@ -909,14 +873,14 @@ const postProfile = {
         const isRetweet = !!post.retweetedPostId;
         const isSimpleRetweet = isRetweet && !post.content && !post.replyToId;
 
-        const isAuthor = post.authorId === currentUserId;
+        const isAuthor = post.authorId === App.currentUserId;
         const MessageIcon = MessageSquare;
 
         const targetPostId = isSimpleRetweet && originalPost ? originalPost.id : post.id;
         const sourcePostForReactions = isSimpleRetweet && originalPost ? originalPost : post;
 
-        const isLiked = sourcePostForReactions.likes?.includes(currentUserId);
-        const isBookmarked = sourcePostForReactions.bookmarks?.includes(currentUserId);
+        const isLiked = sourcePostForReactions.likes?.includes(App.currentUserId);
+        const isBookmarked = sourcePostForReactions.bookmarks?.includes(App.currentUserId);
 
         const retweetsCount = posts.filter(p => p.retweetedPostId === post.id).length;
 
@@ -924,7 +888,7 @@ const postProfile = {
             p.retweetedPostId === post.id &&
             !p.content &&
             !p.replyToId &&
-            p.authorId === currentUserId
+            p.authorId === App.currentUserId
         );
 
         const postProfile = isSimpleRetweet && originalPost ? {
@@ -1000,7 +964,7 @@ const postProfile = {
 
         const handleReplyButtonClick = (e) => {
             e.stopPropagation();
-            if (currentUserId) {
+            if (App.currentUserId) {
                 onReplyClick(post);
             }
         };
@@ -1063,6 +1027,7 @@ const postProfile = {
                                         </span>
                                         <span>·</span>
                                         <span>{formatTimestamp(new Date(post.timestamp))}</span>
+                                        {post.editedAt && <span className="italic text-xs">(수정됨)</span>}
                                     </div>
                                 )}
 
@@ -1138,6 +1103,7 @@ const postProfile = {
                                     <span className="text-gray-500 dark:text-gray-400 flex-shrink-0 text-sm">
                                         {new Date(post.timestamp).toLocaleString('ko-KR')}
                                     </span>
+                                    {post.editedAt && <span className="italic text-sm">(수정됨)</span>}
                                 </div>
                             )}
 
@@ -1146,7 +1112,7 @@ const postProfile = {
                                     <button
                                         onClick={handleReplyButtonClick}
                                         className="flex items-center space-x-1 hover:text-blue-500 transition"
-                                        disabled={!currentUserId}
+                                        disabled={!App.currentUserId}
                                     >
                                         {typeof MessageIcon === 'string' ? <span>{MessageIcon}</span> : <MessageIcon size={isMainFocus ? 20 : 16} />}
                                         <span>{replies.length > 0 ? replies.length : ''}</span>
@@ -1156,7 +1122,7 @@ const postProfile = {
                                         <button
                                             onClick={(e) => { e.stopPropagation(); setShowRetweetMenu(!showRetweetMenu); }}
                                             className={`flex items-center space-x-1 transition disabled:opacity-50 ${isRetweetedByCurrentUser ? 'text-green-500 hover:text-green-600' : 'hover:text-green-500'}`}
-                                            disabled={!currentUserId}
+                                            disabled={!App.currentUserId}
                                         >
                                             {typeof RepeatIcon === 'string'
                                                 ? <span>{RepeatIcon}</span>
@@ -1186,7 +1152,7 @@ const postProfile = {
                                     <button
                                         onClick={(e) => { e.stopPropagation(); onToggleLike(targetPostId); }}
                                         className={`flex items-center space-x-1 transition disabled:opacity-50 ${isLiked ? 'text-red-500 hover:text-red-600' : 'hover:text-red-500'}`}
-                                        disabled={!currentUserId}
+                                        disabled={!App.currentUserId}
                                     >
                                         {typeof Heart === 'string'
                                             ? <span>{isLiked ? '❤️' : '🤍'}</span>
@@ -1198,7 +1164,7 @@ const postProfile = {
                                     <button
                                         onClick={(e) => { e.stopPropagation(); onToggleBookmark(targetPostId); }}
                                         className={`flex items-center space-x-1 transition disabled:opacity-50 ${isBookmarked ? 'text-blue-500 hover:text-blue-600' : 'hover:text-blue-500'}`}
-                                        disabled={!currentUserId}
+                                        disabled={!App.currentUserId}
                                     >
                                         {typeof Bookmark === 'string'
                                             ? <span>{isBookmarked ? '★' : '☆'}</span>
@@ -1477,8 +1443,8 @@ const App = () => {
             };
         }, [currentUserId, mockUserProfile, currentCustomProfile]); 
 
-        App.currentUserProfile = currentUserProfile;
-    App.currentUserId = currentUserId;
+        App.currentUserProfile = currentUserProfile; 
+        App.currentUserId = currentUserId; 
         
         const filteredUsers = useMemo(() => 
             MOCK_USERS.filter(user => user.group === activeGroup),
@@ -1523,7 +1489,7 @@ const App = () => {
         const handleProfileSwitch = (user) => {
             const fullProfile = allCustomProfiles[user.uid] ? { ...user, ...allCustomProfiles[user.uid] } : user;
             
-            if (setCurrentUserId(user.uid);) {
+            if (currentUserId === user.uid) {
                 return handleLogout(); 
             }
 
@@ -1725,7 +1691,7 @@ if (initialPostsLoadedRef.current) {
   for (const change of changes) {
     if (change.type === 'added') {
       const data = change.doc.data();
-      if (data.authorId && data.authorId !== currentUserId) {
+      if (data.authorId && data.authorId !== App.currentUserId) {
         playDing();
       }
     }
@@ -1743,7 +1709,7 @@ if (initialPostsLoadedRef.current) {
 }, [db, isLoading]);
 
         const handleReplyClick = useCallback((post) => {
-            if (currentUserId) {
+            if (App.currentUserId) {
                 setReplyToPost(post);
             }
         }, []);
@@ -2203,7 +2169,7 @@ if (initialPostsLoadedRef.current) {
                             <span className="font-semibold text-gray-500 dark:text-gray-400 self-center mb-2 block border-b pb-1 dark:border-gray-700">
                                 {customGroups[activeGroup] || MOCK_GROUPS.find(g => g.id === activeGroup)?.name} 프로필 선택:
                             </span>
-                           <div className="flex flex-wrap justify-center gap-3">
+                            <div className="flex flex-wrap justify-center gap-3">
                                 {filteredUsers.map(user => {
                                     const custom = allCustomProfiles[user.uid] || {};
                                     const displayProfile = {
@@ -2220,7 +2186,7 @@ if (initialPostsLoadedRef.current) {
                                             onClick={() => handleProfileSwitch(user)}
                                             className={`flex items-center p-3 rounded-xl text-white transition w-full max-w-[48%] sm:max-w-[30%]
                                             ${user.color} 
-                                            ${setCurrentUserId(user.uid); ? 'ring-4 ring-offset-2 ring-red-400 scale-[1.01] opacity-100 shadow-lg' : 'opacity-80 hover:opacity-100'}
+                                            ${currentUserId === user.uid ? 'ring-4 ring-offset-2 ring-red-400 scale-[1.01] opacity-100 shadow-lg' : 'opacity-80 hover:opacity-100'}
                                             `}
                                         >
                                             <div className="mr-2">
@@ -2472,7 +2438,7 @@ if (initialPostsLoadedRef.current) {
                     />
                 )}
 
-                {replyToPost && currentUserId && (
+                {replyToPost && App.currentUserId && (
                     <ReplyModal
                         post={replyToPost}
                         onReply={handlePost}
@@ -2502,17 +2468,3 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
