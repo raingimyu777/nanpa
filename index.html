@@ -908,14 +908,14 @@ const postProfile = {
         const isRetweet = !!post.retweetedPostId;
         const isSimpleRetweet = isRetweet && !post.content && !post.replyToId;
 
-        const isAuthor = post.authorId === App.currentUserId;
+        const isAuthor = post.authorId === currentUserId;
         const MessageIcon = MessageSquare;
 
         const targetPostId = isSimpleRetweet && originalPost ? originalPost.id : post.id;
         const sourcePostForReactions = isSimpleRetweet && originalPost ? originalPost : post;
 
-        const isLiked = sourcePostForReactions.likes?.includes(App.currentUserId);
-        const isBookmarked = sourcePostForReactions.bookmarks?.includes(App.currentUserId);
+        const isLiked = sourcePostForReactions.likes?.includes(currentUserId);
+        const isBookmarked = sourcePostForReactions.bookmarks?.includes(currentUserId);
 
         const retweetsCount = posts.filter(p => p.retweetedPostId === post.id).length;
 
@@ -923,7 +923,7 @@ const postProfile = {
             p.retweetedPostId === post.id &&
             !p.content &&
             !p.replyToId &&
-            p.authorId === App.currentUserId
+            p.authorId === currentUserId
         );
 
         const postProfile = isSimpleRetweet && originalPost ? {
@@ -999,7 +999,7 @@ const postProfile = {
 
         const handleReplyButtonClick = (e) => {
             e.stopPropagation();
-            if (App.currentUserId) {
+            if (currentUserId) {
                 onReplyClick(post);
             }
         };
@@ -1145,7 +1145,7 @@ const postProfile = {
                                     <button
                                         onClick={handleReplyButtonClick}
                                         className="flex items-center space-x-1 hover:text-blue-500 transition"
-                                        disabled={!App.currentUserId}
+                                        disabled={!currentUserId}
                                     >
                                         {typeof MessageIcon === 'string' ? <span>{MessageIcon}</span> : <MessageIcon size={isMainFocus ? 20 : 16} />}
                                         <span>{replies.length > 0 ? replies.length : ''}</span>
@@ -1155,7 +1155,7 @@ const postProfile = {
                                         <button
                                             onClick={(e) => { e.stopPropagation(); setShowRetweetMenu(!showRetweetMenu); }}
                                             className={`flex items-center space-x-1 transition disabled:opacity-50 ${isRetweetedByCurrentUser ? 'text-green-500 hover:text-green-600' : 'hover:text-green-500'}`}
-                                            disabled={!App.currentUserId}
+                                            disabled={!currentUserId}
                                         >
                                             {typeof RepeatIcon === 'string'
                                                 ? <span>{RepeatIcon}</span>
@@ -1185,7 +1185,7 @@ const postProfile = {
                                     <button
                                         onClick={(e) => { e.stopPropagation(); onToggleLike(targetPostId); }}
                                         className={`flex items-center space-x-1 transition disabled:opacity-50 ${isLiked ? 'text-red-500 hover:text-red-600' : 'hover:text-red-500'}`}
-                                        disabled={!App.currentUserId}
+                                        disabled={!currentUserId}
                                     >
                                         {typeof Heart === 'string'
                                             ? <span>{isLiked ? '❤️' : '🤍'}</span>
@@ -1197,7 +1197,7 @@ const postProfile = {
                                     <button
                                         onClick={(e) => { e.stopPropagation(); onToggleBookmark(targetPostId); }}
                                         className={`flex items-center space-x-1 transition disabled:opacity-50 ${isBookmarked ? 'text-blue-500 hover:text-blue-600' : 'hover:text-blue-500'}`}
-                                        disabled={!App.currentUserId}
+                                        disabled={!currentUserId}
                                     >
                                         {typeof Bookmark === 'string'
                                             ? <span>{isBookmarked ? '★' : '☆'}</span>
@@ -1477,7 +1477,7 @@ const App = () => {
         }, [currentUserId, mockUserProfile, currentCustomProfile]); 
 
         App.currentUserProfile = currentUserProfile; 
-        App.currentUserId = currentUserId; 
+        currentUserId = currentUserId; 
         
         const filteredUsers = useMemo(() => 
             MOCK_USERS.filter(user => user.group === activeGroup),
@@ -1724,7 +1724,7 @@ if (initialPostsLoadedRef.current) {
   for (const change of changes) {
     if (change.type === 'added') {
       const data = change.doc.data();
-      if (data.authorId && data.authorId !== App.currentUserId) {
+      if (data.authorId && data.authorId !== currentUserId) {
         playDing();
       }
     }
@@ -1742,7 +1742,7 @@ if (initialPostsLoadedRef.current) {
 }, [db, isLoading]);
 
         const handleReplyClick = useCallback((post) => {
-            if (App.currentUserId) {
+            if (currentUserId) {
                 setReplyToPost(post);
             }
         }, []);
