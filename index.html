@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nanpa Twitter</title>
+    <title>Nanparu Twitter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -130,7 +130,7 @@ function playDing() {
     const Sun = Lucide.Sun || '☼';
     const Moon = Lucide.Moon || '☽';
 
-const hardcodedFirebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyCdkscN8L-0jN9Z3ySw8g6UsuqNytS_IbI",
   authDomain: "nanpa-e56ea.firebaseapp.com",
   projectId: "nanpa-e56ea",
@@ -169,16 +169,23 @@ const hardcodedFirebaseConfig = {
 const MOCK_GROUPS = [
     { id: 'group1', name: '난파', icon: '🤎💜' },
     { id: 'group2', name: '블루토', icon: '🖤💙' },
-    { id: 'group3', name: '기타', icon: '💌' },
+    { id: 'group3', name: '마르솔', icon: '🤍🖤' },
 ];
 
 const MOCK_USERS = [
-    { uid: 'user-001', name: '이 난', handle: 'user1', color: 'bg-gray-500', profile: '2', group: 'group1' },
+    { uid: 'user-007', name: '이 난', handle: 'user7', color: 'bg-gray-500', profile: '2', group: 'group1'  },
+    { uid: 'user-008', name: '파이톤', handle: 'user8', color: 'bg-gray-500', profile: '2', group: 'group1' },
+   // 윗 이난 파이톤 : 오리진
+     { uid: 'user-001', name: '이 난', handle: 'user1', color: 'bg-gray-500', profile: '2', group: 'group1' },
     { uid: 'user-002', name: '파이톤', handle: 'user2', color: 'bg-gray-500', profile: '2', group: 'group1' },
-    { uid: 'user-005', name: '플루토', handle: 'user5', color: 'bg-gray-500', profile: '5', group: 'group2' },
+   // 윗 이난 파이톤 : 청춘AU
+    { uid: 'user-005', name: '플루토', handle: 'user5', color: 'bg-gray-500', profile: '5', group: 'group2', profileImageUrl: 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'},
     { uid: 'user-006', name: '블루 민', handle: 'user6', color: 'bg-gray-500', profile: '6', group: 'group2' },
+  { uid: 'user-009', name: '솔 브라이튼', handle: 'user9', color: 'bg-gray-500', profile: '9', group: 'group3' },
+    { uid: 'user-0010', name: '마르코 베스페르', handle: 'use10', color: 'bg-gray-500', profile: '10', group: 'group3', profileImageUrl: 'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2Fb6onzl%2FdJMcagElL1h%2FAAAAAAAAAAAAAAAAAAAAAGw1Loxs4DJMssCfQKQClmGR07zeb9dqK4R0y5MveSQK%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1772290799%26allow_ip%3D%26allow_referer%3D%26signature%3D%252B%252Bdz73PBLhWF2zNvQhXZ6LdIjY4%253D' },
     { uid: 'user-003', name: 'Story', handle: 'user3', color: 'bg-gray-500', profile: '3', group: 'group3' },
     { uid: 'user-004', name: 'NPC', handle: 'user4', color: 'bg-gray-500', profile: '4', group: 'group3' },
+
 
 ];
     
@@ -204,10 +211,27 @@ const MOCK_USERS = [
         });
     };
 
-    const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
-        const hasImage = profile.profileImageUrl && profile.profileImageUrl.startsWith('http');
-        
-        const handleImageError = (e, profile) => {
+  const ProfilePictureDisplay = ({
+  profile,
+  sizeClass = 'w-10 h-10',
+  textSizeClass = 'text-lg',
+  isSmall = false
+}) => {
+
+  const currentUser = MOCK_USERS.find(u =>
+    (profile.uid && u.uid === profile.uid) ||
+    (profile.handle && u.handle === profile.handle) ||
+    (profile.name && u.name === profile.name)
+  );
+
+  const imageUrl =
+    currentUser?.profileImageUrl ||
+    profile.profileImageUrl ||
+    '';
+
+  const hasImage = imageUrl.startsWith('http');
+
+  const handleImageError = (e, profile) => {
             e.target.style.display = 'none'; 
             const parentDiv = e.target.parentElement;
             const colorClass = profile.color.split('-').slice(1, 3).join('-');
@@ -237,12 +261,12 @@ const MOCK_USERS = [
             <div 
                 className={`rounded-full flex items-center justify-center flex-shrink-0 ${sizeClass} ${hasImage ? 'overflow-hidden bg-transparent' : defaultStyleClass}`}
             >
-                {hasImage ? (
-                    <img 
-                        src={profile.profileImageUrl} 
-                        alt={`${profile.name} profile`} 
-                        className="w-full h-full object-cover"
-                        onError={(e) => handleImageError(e, profile)}
+{hasImage ? (
+    <img 
+        src={imageUrl}
+        alt={`${profile.name} profile`} 
+        className="w-full h-full object-cover"
+        onError={(e) => handleImageError(e, profile)}
                     />
                 ) : (
                     <span className={`${textSizeClass} ${isSmall ? 'text-white' : ''}`}>{profile.profile}</span>
@@ -457,14 +481,22 @@ const MOCK_USERS = [
             handle: '사용자',
             profileImageUrl: '' 
         };
-        
-        const postProfile = {
-            name: post.authorName,
-            handle: post.authorHandle,
-            profile: post.authorProfile,
-            profileImageUrl: post.authorImageUrl,
-            color: post.authorColor,
-        };
+
+const currentUser = MOCK_USERS.find(u =>
+  (post.authorUid && u.uid === post.authorUid) ||
+  (post.authorHandle && u.handle === post.authorHandle) ||
+  (post.authorName && u.name === post.authorName)
+);
+
+const postProfile = {
+  name: post.authorName,
+  handle: post.authorHandle,
+  profile: post.authorProfile,
+  profileImageUrl:
+    currentUser?.profileImageUrl || post.authorImageUrl || '',
+  color: post.authorColor,
+};
+
         
       const handleReplySubmit = (e) => {
     e.preventDefault();
@@ -827,11 +859,14 @@ const MOCK_USERS = [
     const QuotedPost = ({ originalPost, onThreadSelect }) => {
         if (!originalPost) return null;
 
+        const currentUser = MOCK_USERS.find(
+    u => u.handle === originalPost.authorHandle
+);
         const postProfile = {
             name: originalPost.authorName,
             handle: originalPost.authorHandle,
             profile: originalPost.authorProfile,
-            profileImageUrl: originalPost.authorImageUrl,
+            profileImageUrl: currentUser?.profileImageUrl || originalPost.authorImageUrl || '',
             color: originalPost.authorColor,
         };
         
@@ -1027,7 +1062,6 @@ const MOCK_USERS = [
                                         </span>
                                         <span>·</span>
                                         <span>{formatTimestamp(new Date(post.timestamp))}</span>
-                                        {post.editedAt && <span className="italic text-xs">(수정됨)</span>}
                                     </div>
                                 )}
 
@@ -1103,7 +1137,6 @@ const MOCK_USERS = [
                                     <span className="text-gray-500 dark:text-gray-400 flex-shrink-0 text-sm">
                                         {new Date(post.timestamp).toLocaleString('ko-KR')}
                                     </span>
-                                    {post.editedAt && <span className="italic text-sm">(수정됨)</span>}
                                 </div>
                             )}
 
@@ -2169,7 +2202,7 @@ if (initialPostsLoadedRef.current) {
                             <span className="font-semibold text-gray-500 dark:text-gray-400 self-center mb-2 block border-b pb-1 dark:border-gray-700">
                                 {customGroups[activeGroup] || MOCK_GROUPS.find(g => g.id === activeGroup)?.name} 프로필 선택:
                             </span>
-                            <div className="flex flex-wrap justify-center gap-3">
+                           <div className="flex flex-wrap justify-center gap-3">
                                 {filteredUsers.map(user => {
                                     const custom = allCustomProfiles[user.uid] || {};
                                     const displayProfile = {
@@ -2468,3 +2501,14 @@ if (initialPostsLoadedRef.current) {
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
