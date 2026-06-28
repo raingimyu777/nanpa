@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nanpa Twitter</title>
+    <title>Nanparu Twitter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -59,7 +59,49 @@
 
 <script type="text/babel">
     const { useState, useEffect, useCallback, useMemo, useRef } = React;
-    
+// 🔔 안전한 "띵" 소리 (전역 유틸: 어디서든 호출 가능)
+function getAudioCtx() {
+  try {
+    if (window.__dingCtx) return window.__dingCtx;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    const ctx = new AC();
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && ctx.state !== 'running') {
+        ctx.resume().catch(() => {});
+      }
+    });
+    window.__dingCtx = ctx;
+    return ctx;
+  } catch {
+    return null;
+  }
+}
+
+function playDing() {
+  try {
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const now = ctx.currentTime;
+
+    osc.type = 'sine';                 // 부드러운 순수톤
+    osc.frequency.setValueAtTime(880, now); // A5 (라) = "띵"
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.35);
+  } catch (e) {
+    console.error('playDing error:', e);
+  }
+}
+
     // 유틸리티 함수: SHA-256 해시 생성 (비밀번호 보안용)
     const sha256 = async (str) => {
         const buffer = new TextEncoder().encode(str);
@@ -125,17 +167,26 @@ const hardcodedFirebaseConfig = {
     
 //그룹과 인원추가를 만지고 싶다면 여기를 수정하세요
 const MOCK_GROUPS = [
-    { id: 'group1', name: '난파', icon: 'A' },
-    { id: 'group2', name: '오너', icon: 'B' },
-    { id: 'group3', name: '기타', icon: 'C' }
+    { id: 'group1', name: '난파', icon: '🤎💜' },
+    { id: 'group2', name: '블루토', icon: '🖤💙' },
+    { id: 'group3', name: '마르솔', icon: '🤍🖤' },
 ];
 
 const MOCK_USERS = [
-    { uid: 'user-001', name: '이 난', handle: 'user1', color: 'bg-gray-500', profile: '2', group: 'group1' },
+    { uid: 'user-007', name: '이 난', handle: 'user7', color: 'bg-gray-500', profile: '2', group: 'group1'  },
+    { uid: 'user-008', name: '파이톤', handle: 'user8', color: 'bg-gray-500', profile: '2', group: 'group1' },
+   // 윗 이난 파이톤 : 오리진
+     { uid: 'user-001', name: '이 난', handle: 'user1', color: 'bg-gray-500', profile: '2', group: 'group1' },
     { uid: 'user-002', name: '파이톤', handle: 'user2', color: 'bg-gray-500', profile: '2', group: 'group1' },
-    { uid: 'user-003', name: '잭', handle: 'user3', color: 'bg-gray-500', profile: '3', group: 'group2' },
-    { uid: 'user-004', name: '기뮤', handle: 'user4', color: 'bg-gray-500', profile: '4', group: 'group2' },
-    { uid: 'user-005', name: '임시', handle: 'user5', color: 'bg-gray-500', profile: '4', group: 'group3' },
+   // 윗 이난 파이톤 : 청춘AU
+    { uid: 'user-005', name: '플루토', handle: 'user5', color: 'bg-gray-500', profile: '5', group: 'group2', profileImageUrl: 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'},
+    { uid: 'user-006', name: '블루 민', handle: 'user6', color: 'bg-gray-500', profile: '6', group: 'group2' },
+  { uid: 'user-009', name: '솔 브라이튼', handle: 'user9', color: 'bg-gray-500', profile: '9', group: 'group3' },
+    { uid: 'user-0010', name: '마르코 베스페르', handle: 'use10', color: 'bg-gray-500', profile: '10', group: 'group3', profileImageUrl: 'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2Fb6onzl%2FdJMcagElL1h%2FAAAAAAAAAAAAAAAAAAAAAGw1Loxs4DJMssCfQKQClmGR07zeb9dqK4R0y5MveSQK%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1772290799%26allow_ip%3D%26allow_referer%3D%26signature%3D%252B%252Bdz73PBLhWF2zNvQhXZ6LdIjY4%253D' },
+    { uid: 'user-003', name: 'Story', handle: 'user3', color: 'bg-gray-500', profile: '3', group: 'group3' },
+    { uid: 'user-004', name: 'NPC', handle: 'user4', color: 'bg-gray-500', profile: '4', group: 'group3' },
+
+
 ];
     
     const EXAMPLE_IMAGE_URL = 'https://i.imgur.com/KDTgHmT.png';
@@ -160,10 +211,27 @@ const MOCK_USERS = [
         });
     };
 
-    const ProfilePictureDisplay = ({ profile, sizeClass = 'w-10 h-10', textSizeClass = 'text-lg', isSmall = false }) => {
-        const hasImage = profile.profileImageUrl && profile.profileImageUrl.startsWith('http');
-        
-        const handleImageError = (e, profile) => {
+  const ProfilePictureDisplay = ({
+  profile,
+  sizeClass = 'w-10 h-10',
+  textSizeClass = 'text-lg',
+  isSmall = false
+}) => {
+
+  const currentUser = MOCK_USERS.find(u =>
+    (profile.uid && u.uid === profile.uid) ||
+    (profile.handle && u.handle === profile.handle) ||
+    (profile.name && u.name === profile.name)
+  );
+
+  const imageUrl =
+    currentUser?.profileImageUrl ||
+    profile.profileImageUrl ||
+    '';
+
+  const hasImage = imageUrl.startsWith('http');
+
+  const handleImageError = (e, profile) => {
             e.target.style.display = 'none'; 
             const parentDiv = e.target.parentElement;
             const colorClass = profile.color.split('-').slice(1, 3).join('-');
@@ -193,12 +261,12 @@ const MOCK_USERS = [
             <div 
                 className={`rounded-full flex items-center justify-center flex-shrink-0 ${sizeClass} ${hasImage ? 'overflow-hidden bg-transparent' : defaultStyleClass}`}
             >
-                {hasImage ? (
-                    <img 
-                        src={profile.profileImageUrl} 
-                        alt={`${profile.name} profile`} 
-                        className="w-full h-full object-cover"
-                        onError={(e) => handleImageError(e, profile)}
+{hasImage ? (
+    <img 
+        src={imageUrl}
+        alt={`${profile.name} profile`} 
+        className="w-full h-full object-cover"
+        onError={(e) => handleImageError(e, profile)}
                     />
                 ) : (
                     <span className={`${textSizeClass} ${isSmall ? 'text-white' : ''}`}>{profile.profile}</span>
@@ -309,15 +377,19 @@ const MOCK_USERS = [
                             <div className="mr-3 flex-shrink-0">
                                 <ProfilePictureDisplay profile={formProfile} sizeClass="w-10 h-10" textSizeClass="text-lg" />
                             </div>
-                            <textarea
-                                ref={textareaRef}
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                                placeholder="인용할 내용을 입력하세요..."
-                                className="flex-grow p-2 text-base border-b border-gray-200 focus:outline-none focus:border-blue-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 resize-none overflow-hidden"
-                                rows="2"
-                                maxLength="280"
-                            />
+                           <textarea
+  ref={textareaRef}
+  value={content}
+  onChange={(e) => setContent(e.target.value)}
+  onInput={(e) => {
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  }}
+  style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
+  placeholder="인용할 내용을 입력하세요."
+  className="flex-grow p-2 text-base border-b border-gray-200 focus:outline-none focus:border-blue-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 resize-none overflow-hidden"
+  rows="2"
+/>
                         </div>
                         
                         <div className="flex items-center justify-between mb-4 mt-2">
@@ -409,20 +481,31 @@ const MOCK_USERS = [
             handle: '사용자',
             profileImageUrl: '' 
         };
+
+const currentUser = MOCK_USERS.find(u =>
+  (post.authorUid && u.uid === post.authorUid) ||
+  (post.authorHandle && u.handle === post.authorHandle) ||
+  (post.authorName && u.name === post.authorName)
+);
+
+const postProfile = {
+  name: post.authorName,
+  handle: post.authorHandle,
+  profile: post.authorProfile,
+  profileImageUrl:
+    currentUser?.profileImageUrl || post.authorImageUrl || '',
+  color: post.authorColor,
+};
+
         
-        const postProfile = {
-            name: post.authorName,
-            handle: post.authorHandle,
-            profile: post.authorProfile,
-            profileImageUrl: post.authorImageUrl,
-            color: post.authorColor,
-        };
-        
-        const handleReplySubmit = (e) => {
-            e.preventDefault();
-            onReply(replyContent, post.id, null, imageUrl.trim()); 
-            onCancel();
-        };
+      const handleReplySubmit = (e) => {
+    e.preventDefault();
+    onReply(replyContent, post.id, null, imageUrl.trim()); 
+
+    // 🔔 소리 재생
+
+    onCancel();
+};
 
         return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start sm:items-center justify-center z-50 p-0 sm:p-4">
@@ -466,16 +549,20 @@ const MOCK_USERS = [
                                 <div className="mr-3 flex-shrink-0 pt-1">
                                     <ProfilePictureDisplay profile={formProfile} sizeClass="w-10 h-10" textSizeClass="text-lg" />
                                 </div>
-                                <textarea
-                                    ref={textareaRef}
-                                    value={replyContent}
-                                    onChange={(e) => setReplyContent(e.target.value)}
-                                    placeholder="답글을 입력하세요..."
-                                    className="flex-grow p-2 text-base border-b border-gray-200 focus:outline-none focus:border-blue-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 resize-none overflow-hidden"
-                                    rows="2"
-                                    disabled={!currentUserId}
-                                    maxLength="280"
-                                />
+                            <textarea
+  ref={textareaRef}
+  value={replyContent}
+  onChange={(e) => setReplyContent(e.target.value)}
+  onInput={(e) => {
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  }}
+  style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
+  placeholder="답글을 입력하세요."
+  className="flex-grow p-2 text-base border-b ... resize-none overflow-hidden"
+  rows="2"
+  disabled={!currentUserId}
+/>
                             </div>
                             
                             <div className="flex flex-col pl-12 pt-2">
@@ -772,11 +859,14 @@ const MOCK_USERS = [
     const QuotedPost = ({ originalPost, onThreadSelect }) => {
         if (!originalPost) return null;
 
+        const currentUser = MOCK_USERS.find(
+    u => u.handle === originalPost.authorHandle
+);
         const postProfile = {
             name: originalPost.authorName,
             handle: originalPost.authorHandle,
             profile: originalPost.authorProfile,
-            profileImageUrl: originalPost.authorImageUrl,
+            profileImageUrl: currentUser?.profileImageUrl || originalPost.authorImageUrl || '',
             color: originalPost.authorColor,
         };
         
@@ -972,7 +1062,6 @@ const MOCK_USERS = [
                                         </span>
                                         <span>·</span>
                                         <span>{formatTimestamp(new Date(post.timestamp))}</span>
-                                        {post.editedAt && <span className="italic text-xs">(수정됨)</span>}
                                     </div>
                                 )}
 
@@ -1048,7 +1137,6 @@ const MOCK_USERS = [
                                     <span className="text-gray-500 dark:text-gray-400 flex-shrink-0 text-sm">
                                         {new Date(post.timestamp).toLocaleString('ko-KR')}
                                     </span>
-                                    {post.editedAt && <span className="italic text-sm">(수정됨)</span>}
                                 </div>
                             )}
 
@@ -1151,13 +1239,16 @@ const MOCK_USERS = [
         };
         
         const handleReplySubmit = (e) => {
-            e.preventDefault();
-            onReply(replyContent, parentId, null, imageUrl.trim()); 
-            const initialContent = !isMainPost && parentAuthorHandle ? `@${parentAuthorHandle} ` : '';
-            setReplyContent(isMainPost ? '' : initialContent);
-            setImageUrl('');
-            setShowImageInput(false);
-        };
+    e.preventDefault();
+    onReply(replyContent, parentId, null, imageUrl.trim()); 
+
+    // 🔔 소리 재생
+
+    const initialContent = !isMainPost && parentAuthorHandle ? `@${parentAuthorHandle} ` : '';
+    setReplyContent(isMainPost ? '' : initialContent);
+    setImageUrl('');
+    setShowImageInput(false);
+};
 
         if (!currentUserId && !isMainPost) return null; 
 
@@ -1167,16 +1258,20 @@ const MOCK_USERS = [
                 <div className="mr-3 flex-shrink-0">
                     <ProfilePictureDisplay profile={formProfile} sizeClass="w-10 h-10 mt-2" textSizeClass="text-lg" />
                 </div>
-                <textarea
-                    ref={textareaRef}
-                    value={replyContent}
-                    onChange={(e) => setReplyContent(e.target.value)}
-                    placeholder={isMainPost ? "지금 무슨 일이 일어나고 있나요?" : "답글을 게시하세요."}
-                    className="flex-grow p-2 text-base bg-transparent focus:outline-none dark:text-gray-100 resize-none overflow-hidden mt-2"
-                    rows="1"
-                    disabled={!currentUserId}
-                    maxLength="280" 
-                />
+ <textarea
+  ref={textareaRef}
+  value={replyContent}
+  onChange={(e) => setReplyContent(e.target.value)}
+  onInput={(e) => {
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  }}
+  style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
+  placeholder={isMainPost ? "지금 무슨 일이 일어나고 있나요?" : "답글을 게시하세요."}
+  className="flex-grow p-2 text-base bg-transparent focus:outline-none dark:text-gray-100 resize-none overflow-hidden mt-2"
+  rows="1"
+  disabled={!currentUserId}
+/>
             </div>
 
             <div className="flex flex-col pl-12 pt-2">
@@ -1594,35 +1689,57 @@ const App = () => {
             }
         }, [currentUserId]);
 
-        useEffect(() => {
-            if (!db || isLoading) return;
-            const postsColRef = collection(db, `/artifacts/${canvasAppId}/public/data/posts`);
-            const q = query(postsColRef);
-            const unsubscribe = onSnapshot(q, (snapshot) => {
-                const fetchedPosts = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    timestamp: doc.data().timestamp?.toDate() || new Date(),
-                    threadUpdatedTimestamp: doc.data().threadUpdatedTimestamp?.toDate(),
-                    likes: doc.data().likes || [], 
-                    bookmarks: doc.data().bookmarks || [], 
-                    retweetedPostId: doc.data().retweetedPostId || null,
-                    imageUrl: doc.data().imageUrl || null,
-                    mentions: doc.data().mentions || [],
-                }));
-                
-                // Firestore에서 가져온 데이터를 timestamp 기준으로 한 번 정렬해 줍니다.
-                const sortedPosts = fetchedPosts.sort((a, b) => {
-                    const aTime = a.timestamp.getTime();
-                    const bTime = b.timestamp.getTime();
-                    return bTime - aTime; 
-                });
-                setPosts(sortedPosts);
-            }, (error) => {
-                console.error("Firestore 데이터 불러오기 오류:", error);
-            });
-            return () => unsubscribe();
-        }, [db, isLoading]); 
+// 🔔 최초 스냅샷 무음 플래그
+const initialPostsLoadedRef = React.useRef(false);
+
+useEffect(() => {
+  if (!db || isLoading) return;
+
+  const postsColRef = collection(db, `/artifacts/${canvasAppId}/public/data/posts`);
+  const q = query(postsColRef);
+
+  const unsubscribe = onSnapshot(
+    q,
+    (snapshot) => {
+      const fetchedPosts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        timestamp: doc.data().timestamp?.toDate() || new Date(),
+        threadUpdatedTimestamp: doc.data().threadUpdatedTimestamp?.toDate(),
+        likes: doc.data().likes || [],
+        bookmarks: doc.data().bookmarks || [],
+        retweetedPostId: doc.data().retweetedPostId || null,
+        imageUrl: doc.data().imageUrl || null,
+        mentions: doc.data().mentions || [],
+      }));
+
+      const sortedPosts = fetchedPosts.sort(
+        (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
+      );
+      setPosts(sortedPosts);
+
+      // added 만, 그리고 작성자가 나가 아닐 때만
+const changes = snapshot.docChanges();
+if (initialPostsLoadedRef.current) {
+  for (const change of changes) {
+    if (change.type === 'added') {
+      const data = change.doc.data();
+      if (data.authorId && data.authorId !== App.currentUserId) {
+        playDing();
+      }
+    }
+  }
+} else {
+  initialPostsLoadedRef.current = true; // 초기 로드 무음
+}
+    },
+    (error) => {
+      console.error("Firestore 데이터 불러오기 오류:", error);
+    }
+  );
+
+  return () => unsubscribe();
+}, [db, isLoading]);
 
         const handleReplyClick = useCallback((post) => {
             if (App.currentUserId) {
@@ -2085,7 +2202,7 @@ const App = () => {
                             <span className="font-semibold text-gray-500 dark:text-gray-400 self-center mb-2 block border-b pb-1 dark:border-gray-700">
                                 {customGroups[activeGroup] || MOCK_GROUPS.find(g => g.id === activeGroup)?.name} 프로필 선택:
                             </span>
-                            <div className="flex flex-wrap justify-center gap-3">
+                           <div className="flex flex-wrap justify-center gap-3">
                                 {filteredUsers.map(user => {
                                     const custom = allCustomProfiles[user.uid] || {};
                                     const displayProfile = {
@@ -2384,6 +2501,13 @@ const App = () => {
 
 </body>
 </html>
+
+
+
+
+
+
+
 
 
 
