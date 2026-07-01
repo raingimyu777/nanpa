@@ -1416,11 +1416,13 @@ const DarkAndLightModeButton = ({ isDarkMode, onToggle }) => {
 };
 
 const App = () => {
-        const [isUnlocked, setIsUnlocked] = useState(() => localStorage.getItem('pw_ok')==='true');
-        const [password, setPassword] = useState('');
         const [db, setDb] = useState(null);
         const [auth, setAuth] = useState(null);
         const [currentUserId, setCurrentUserId] = useState(getInitialActiveUser());
+
+        const [pwOK, setPwOK] = useState(() => sessionStorage.getItem('pw_ok') === 'true');
+        const [pwInput, setPwInput] = useState('');
+
         const [posts, setPosts] = useState([]);
         const [isLoading, setIsLoading] = useState(true);
         const [activeGroup, setActiveGroup] = useState(MOCK_GROUPS[0].id);
@@ -1611,47 +1613,7 @@ const App = () => {
                     setIsLoading(false);
                 });
 
-                        if (!isUnlocked) {
-            return (
-                <div className="min-h-screen flex items-center justify-center bg-gray-100">
-                    <div className="bg-white p-6 rounded-xl shadow-lg w-80">
-                        <h2 className="text-xl font-bold mb-4 text-center">비밀번호 입력</h2>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e)=>setPassword(e.target.value)}
-                            onKeyDown={(e)=>{
-                                if(e.key==='Enter'){
-                                    if(password==='0501'){
-                                        localStorage.setItem('pw_ok','true');
-                                        setIsUnlocked(true);
-                                    } else {
-                                        alert('비밀번호가 틀렸습니다.');
-                                        setPassword('');
-                                    }
-                                }
-                            }}
-                            className="border rounded w-full p-2 mb-3"
-                            placeholder="비밀번호"
-                        />
-                        <button
-                            className="w-full bg-blue-500 text-white rounded p-2"
-                            onClick={()=>{
-                                if(password==='0501'){
-                                    localStorage.setItem('pw_ok','true');
-                                    setIsUnlocked(true);
-                                } else {
-                                    alert('비밀번호가 틀렸습니다.');
-                                    setPassword('');
-                                }
-                            }}
-                        >확인</button>
-                    </div>
-                </div>
-            );
-        }
-
-return () => unsubscribe();
+                return () => unsubscribe();
             } catch (e) {
                 console.error("Firebase 초기화 또는 인증 오류:", e.name, e.message);
                 setIsLoading(false);
@@ -2442,7 +2404,22 @@ if (initialPostsLoadedRef.current) {
 
                                     // [원본 글] → [부모 댓글] → [최신 대댓글] 구조로 렌더링
                                     if (item.type === 'branch') {
-                                        return (
+                                        if (!pwOK) {
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-gray-100">
+                    <div className="bg-white p-6 rounded-xl shadow-lg w-80">
+                        <h2 className="text-xl font-bold mb-4 text-center">비밀번호</h2>
+                        <input type="password" value={pwInput} onChange={e=>setPwInput(e.target.value)}
+                        onKeyDown={e=>{if(e.key==='Enter'){if(pwInput==='0501'){sessionStorage.setItem('pw_ok','true');setPwOK(true);}else{alert('비밀번호가 틀렸습니다.');setPwInput('');}}}}
+                        className="border w-full p-2 rounded mb-3"/>
+                        <button className="w-full bg-blue-500 text-white p-2 rounded"
+                        onClick={()=>{if(pwInput==='0501'){sessionStorage.setItem('pw_ok','true');setPwOK(true);}else{alert('비밀번호가 틀렸습니다.');setPwInput('');}}}>확인</button>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
                                             <div 
                                                 key={item.id} 
                                                 className="border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50/50 dark:hover:bg-gray-900/50"
