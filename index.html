@@ -175,10 +175,13 @@ const MOCK_GROUPS = [
 const MOCK_USERS = [
     { uid: 'user-007', name: '이 난', handle: 'user7', color: 'bg-gray-500', profile: '2', group: 'group1'  },
     { uid: 'user-008', name: '파이톤', handle: 'user8', color: 'bg-gray-500', profile: '2', group: 'group1' },
-   // 윗 이난 파이톤 : 오리진
+   // 윗 이난 파이톤 : 오피스AU
      { uid: 'user-001', name: '이 난', handle: 'user1', color: 'bg-gray-500', profile: '2', group: 'group1' },
     { uid: 'user-002', name: '파이톤', handle: 'user2', color: 'bg-gray-500', profile: '2', group: 'group1' },
    // 윗 이난 파이톤 : 청춘AU
+       { uid: 'user-009', name: '이 난', handle: 'user9', color: 'bg-gray-500', profile: '2', group: 'group1' },
+    { uid: 'user-010', name: '파이톤', handle: 'user10', color: 'bg-gray-500', profile: '2', group: 'group1' },
+   // 윗 이난 파이톤 : 오리진
     { uid: 'user-005', name: '플루토', handle: 'user5', color: 'bg-gray-500', profile: '5', group: 'group2', profileImageUrl: 'https://blog.kakaocdn.net/dna/lWjZ6/dJMcadgb6QS/AAAAAAAAAAAAAAAAAAAAADZoU_ofVpUGSABKq1cqMEqreduAADh6GIbNlHdnyaNk/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1769871599&allow_ip=&allow_referer=&signature=FXDa064Db9fWaIPGBsw9CxGslt0%3D'},
     { uid: 'user-006', name: '블루 민', handle: 'user6', color: 'bg-gray-500', profile: '6', group: 'group2' },
   { uid: 'user-009', name: '솔 브라이튼', handle: 'user9', color: 'bg-gray-500', profile: '9', group: 'group3' },
@@ -218,7 +221,7 @@ const MOCK_USERS = [
   isSmall = false
 }) => {
 
-  const currentUser = MOCK_USERS.find(u =>
+  const current = MOCK_USERS.find(u =>
     (profile.uid && u.uid === profile.uid) ||
     (profile.handle && u.handle === profile.handle) ||
     (profile.name && u.name === profile.name)
