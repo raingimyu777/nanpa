@@ -1416,18 +1416,8 @@ const DarkAndLightModeButton = ({ isDarkMode, onToggle }) => {
 };
 
 const App = () => {
-        const [siteUnlocked, setSiteUnlocked] = useState(() => localStorage.getItem('pw_ok')==='true');
-        if (!siteUnlocked) {
-            return (
-                <div style={{display:'flex',justifyContent:'center',alignItems:'center',height:'100vh',background:'#111',color:'#fff',flexDirection:'column',gap:'12px'}}>
-                    <h2>비밀번호를 입력하세요</h2>
-                    <input id="sitepw" type="password" style={{padding:'10px',color:'#000'}} onKeyDown={(e)=>{if(e.key==='Enter'){const ok=e.target.value==='0501'; if(ok){localStorage.setItem('pw_ok','true'); setSiteUnlocked(true);} else {alert('비밀번호가 틀렸습니다.'); e.target.value='';}}}} />
-                    <button onClick={()=>{const el=document.getElementById('sitepw'); if(el.value==='0501'){localStorage.setItem('pw_ok','true'); setSiteUnlocked(true);} else {alert('비밀번호가 틀렸습니다.'); el.value='';}} style={{padding:'8px 18px',background:'#2563eb',color:'#fff'}}>확인</button>
-                </div>
-            );
-        }
-
-
+        const [isUnlocked, setIsUnlocked] = useState(() => localStorage.getItem('pw_ok')==='true');
+        const [password, setPassword] = useState('');
         const [db, setDb] = useState(null);
         const [auth, setAuth] = useState(null);
         const [currentUserId, setCurrentUserId] = useState(getInitialActiveUser());
@@ -1621,7 +1611,47 @@ const App = () => {
                     setIsLoading(false);
                 });
 
-                return () => unsubscribe();
+                        if (!isUnlocked) {
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-gray-100">
+                    <div className="bg-white p-6 rounded-xl shadow-lg w-80">
+                        <h2 className="text-xl font-bold mb-4 text-center">비밀번호 입력</h2>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e)=>setPassword(e.target.value)}
+                            onKeyDown={(e)=>{
+                                if(e.key==='Enter'){
+                                    if(password==='0501'){
+                                        localStorage.setItem('pw_ok','true');
+                                        setIsUnlocked(true);
+                                    } else {
+                                        alert('비밀번호가 틀렸습니다.');
+                                        setPassword('');
+                                    }
+                                }
+                            }}
+                            className="border rounded w-full p-2 mb-3"
+                            placeholder="비밀번호"
+                        />
+                        <button
+                            className="w-full bg-blue-500 text-white rounded p-2"
+                            onClick={()=>{
+                                if(password==='0501'){
+                                    localStorage.setItem('pw_ok','true');
+                                    setIsUnlocked(true);
+                                } else {
+                                    alert('비밀번호가 틀렸습니다.');
+                                    setPassword('');
+                                }
+                            }}
+                        >확인</button>
+                    </div>
+                </div>
+            );
+        }
+
+return () => unsubscribe();
             } catch (e) {
                 console.error("Firebase 초기화 또는 인증 오류:", e.name, e.message);
                 setIsLoading(false);
