@@ -55,7 +55,29 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 font-sans">
 
-<div id="root"></div>
+<div id="passwordScreen" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#111;z-index:99999;">
+<div style="background:white;padding:30px;border-radius:12px;text-align:center;min-width:320px">
+<h2 style="font-size:20px;font-weight:bold;margin-bottom:15px">비밀번호 입력</h2>
+<input id="pwInput" type="password" style="border:1px solid #ccc;padding:8px;width:100%" placeholder="비밀번호">
+<button onclick="checkPassword()" style="margin-top:12px;padding:8px 16px;background:#2563eb;color:#fff;border:none;border-radius:6px;width:100%">확인</button>
+</div></div>
+<div id="root" style="display:none"></div>
+<script>
+function checkPassword(){
+ var v=document.getElementById('pwInput').value;
+ if(v==='0501'){
+   document.getElementById('passwordScreen').style.display='none';
+   document.getElementById('root').style.display='block';
+ }else{
+   alert('비밀번호가 틀렸습니다.');
+   document.getElementById('pwInput').value='';
+ }
+}
+document.addEventListener('DOMContentLoaded',function(){
+ const i=document.getElementById('pwInput');
+ if(i){i.addEventListener('keydown',e=>{if(e.key==='Enter')checkPassword();});}
+});
+</script>
 
 <script type="text/babel">
     const { useState, useEffect, useCallback, useMemo, useRef } = React;
@@ -1419,10 +1441,6 @@ const App = () => {
         const [db, setDb] = useState(null);
         const [auth, setAuth] = useState(null);
         const [currentUserId, setCurrentUserId] = useState(getInitialActiveUser());
-
-        const [pwOK, setPwOK] = useState(() => sessionStorage.getItem('pw_ok') === 'true');
-        const [pwInput, setPwInput] = useState('');
-
         const [posts, setPosts] = useState([]);
         const [isLoading, setIsLoading] = useState(true);
         const [activeGroup, setActiveGroup] = useState(MOCK_GROUPS[0].id);
@@ -2404,22 +2422,7 @@ if (initialPostsLoadedRef.current) {
 
                                     // [원본 글] → [부모 댓글] → [최신 대댓글] 구조로 렌더링
                                     if (item.type === 'branch') {
-                                        if (!pwOK) {
-            return (
-                <div className="min-h-screen flex items-center justify-center bg-gray-100">
-                    <div className="bg-white p-6 rounded-xl shadow-lg w-80">
-                        <h2 className="text-xl font-bold mb-4 text-center">비밀번호</h2>
-                        <input type="password" value={pwInput} onChange={e=>setPwInput(e.target.value)}
-                        onKeyDown={e=>{if(e.key==='Enter'){if(pwInput==='0501'){sessionStorage.setItem('pw_ok','true');setPwOK(true);}else{alert('비밀번호가 틀렸습니다.');setPwInput('');}}}}
-                        className="border w-full p-2 rounded mb-3"/>
-                        <button className="w-full bg-blue-500 text-white p-2 rounded"
-                        onClick={()=>{if(pwInput==='0501'){sessionStorage.setItem('pw_ok','true');setPwOK(true);}else{alert('비밀번호가 틀렸습니다.');setPwInput('');}}}>확인</button>
-                    </div>
-                </div>
-            );
-        }
-
-        return (
+                                        return (
                                             <div 
                                                 key={item.id} 
                                                 className="border-b border-gray-200 dark:border-gray-800 cursor-pointer hover:bg-gray-50/50 dark:hover:bg-gray-900/50"
